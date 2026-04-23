@@ -1,0 +1,7 @@
+/*
+  X-Content-Type-Options: nosniff
+  Cache-Control: no-cache, no-transform
+
+/*.html
+  Content-Security-Policy: script-src 'self' 'unsafe-inline' https://formspree.io https://www.googletagmanager.com https://www.google-analytics.com
+  X-Robots-Tag: index, follow

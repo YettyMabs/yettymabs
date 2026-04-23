@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SharePoint Intranet Showcase | YettyMabs Limited</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1020;
+    --navy2: #0A1020;
+    --gold: #A63255;
+    --white: #F7F2EC;
+    --grey: #6A7F9A;
+    --border: rgba(166,50,85,0.2);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Barlow',sans-serif; background:var(--navy); color:var(--white); }
+
+  /* HEADER */
+  .header {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2.5rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-area { display:flex; align-items:center; gap:1rem; }
+  .logo-mark {
+    width:36px; height:36px; background:var(--gold); border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px;
+    color:var(--navy); letter-spacing:0.5px;
+  }
+  .brand-name { font-family:'Barlow Condensed',sans-serif; font-size:1.15rem; font-weight:600; }
+  .brand-sub { font-size:0.7rem; color:var(--grey); letter-spacing:0.08em; text-transform:uppercase; }
+  .header-cta {
+    padding:8px 20px; background:var(--gold); color:var(--navy);
+    font-family:'Barlow',sans-serif; font-size:0.8rem; font-weight:700;
+    text-decoration:none; letter-spacing:0.05em; text-transform:uppercase;
+    border-radius:6px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 5rem 2.5rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .hero-tag {
+    display:inline-block; padding:4px 14px;
+    background:rgba(166,50,85,0.12); border:1px solid var(--border);
+    color:var(--gold); font-size:0.72rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.1em;
+    border-radius:4px; margin-bottom:1.5rem;
+  }
+  .hero h1 {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:clamp(2.2rem,5vw,3.8rem);
+    font-weight:700; line-height:1.1;
+    margin-bottom:1.5rem;
+  }
+  .hero h1 em { font-style:normal; color:var(--gold); }
+  .hero-desc {
+    font-size:1.05rem; color:var(--grey); line-height:1.8;
+    max-width:680px; margin:0 auto 2.5rem;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display:grid; grid-template-columns:repeat(4,1fr);
+    gap:1rem; max-width:900px; margin:0 auto 4rem;
+  }
+  .stat-card {
+    background:rgba(15,32,64,0.8); border:1px solid var(--border);
+    border-radius:10px; padding:1.2rem;
+    border-top:3px solid var(--gold);
+  }
+  .stat-num {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:2rem; font-weight:700; color:var(--gold); line-height:1;
+    margin-bottom:0.3rem;
+  }
+  .stat-label { font-size:0.75rem; color:var(--grey); line-height:1.4; }
+
+  /* GOLD RULE */
+  .gold-rule {
+    height:1px; background:var(--border);
+    max-width:1100px; margin:0 auto 3rem;
+  }
+
+  /* SECTION */
+  .section { max-width:1100px; margin:0 auto; padding:0 2.5rem 4rem; }
+  .section-label {
+    font-size:0.7rem; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.12em; color:var(--gold); margin-bottom:0.75rem;
+  }
+  .section h2 {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1.8rem; font-weight:700; margin-bottom:0.75rem;
+  }
+  .section h2 em { font-style:normal; color:var(--gold); }
+  .section-desc { font-size:0.95rem; color:var(--grey); line-height:1.8; margin-bottom:2rem; max-width:700px; }
+
+  /* SCREENSHOT SHOWCASE */
+  .showcase {
+    background:rgba(15,32,64,0.6); border:1px solid var(--border);
+    border-radius:14px; overflow:hidden; margin-bottom:1rem;
+  }
+  .showcase-header {
+    padding:0.75rem 1.25rem;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .dot { width:10px; height:10px; border-radius:50%; }
+  .dot-r { background:#e74c3c; }
+  .dot-a { background:#A63255; }
+  .dot-g { background:#2ecc71; }
+  .showcase-title {
+    font-size:0.75rem; color:var(--grey);
+    margin-left:0.5rem; font-weight:500;
+  }
+  .showcase img {
+    width:100%; display:block;
+    border-radius:0 0 14px 14px;
+  }
+
+  /* FEATURES GRID */
+  .features-grid {
+    display:grid; grid-template-columns:repeat(3,1fr);
+    gap:1rem; margin-bottom:3rem;
+  }
+  .feature-card {
+    background:rgba(15,32,64,0.8); border:1px solid var(--border);
+    border-radius:10px; padding:1.4rem;
+  }
+  .feature-icon {
+    font-size:1.4rem; margin-bottom:0.75rem;
+  }
+  .feature-title {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1rem; font-weight:600; margin-bottom:0.4rem; color:var(--white);
+  }
+  .feature-desc { font-size:0.82rem; color:var(--grey); line-height:1.6; }
+
+  /* SCREENSHOT GRID */
+  .screenshot-grid {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:1rem; margin-bottom:3rem;
+  }
+
+  /* TABS */
+  .tab-bar {
+    display:flex; gap:0.25rem;
+    background:rgba(0,0,0,0.3); padding:4px;
+    border-radius:10px; width:fit-content; margin-bottom:1.5rem;
+  }
+  .tab {
+    padding:7px 18px; border:none; border-radius:7px;
+    background:transparent; color:var(--grey);
+    font-family:'Barlow',sans-serif; font-size:0.82rem; font-weight:500;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .tab.active { background:var(--gold); color:var(--navy); }
+  .tab:hover:not(.active) { color:var(--white); background:rgba(255,255,255,0.05); }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* SCOPE TABLE */
+  .scope-table { width:100%; border-collapse:collapse; font-size:0.88rem; margin-bottom:2rem; }
+  .scope-table th {
+    text-align:left; padding:10px 14px;
+    font-size:0.7rem; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--gold);
+    background:var(--navy2); font-weight:600;
+  }
+  .scope-table td {
+    padding:10px 14px;
+    border-bottom:1px solid rgba(166,50,85,0.07);
+    color:var(--white);
+  }
+  .scope-table tr:last-child td { border-bottom:none; }
+  .scope-table tr:hover td { background:rgba(255,255,255,0.02); }
+
+  /* CTA STRIP */
+  .cta-strip {
+    background:rgba(166,50,85,0.08); border:1px solid var(--border);
+    border-radius:14px; padding:2.5rem; text-align:center; margin-bottom:4rem;
+  }
+  .cta-strip h3 {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1.6rem; font-weight:700; margin-bottom:0.75rem;
+  }
+  .cta-strip h3 em { font-style:normal; color:var(--gold); }
+  .cta-strip p { color:var(--grey); font-size:0.95rem; margin-bottom:1.5rem; }
+  .cta-btn {
+    display:inline-block; padding:12px 28px;
+    background:var(--gold); color:var(--navy);
+    font-family:'Barlow',sans-serif; font-size:0.88rem; font-weight:700;
+    text-decoration:none; letter-spacing:0.05em; text-transform:uppercase;
+    border-radius:8px;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align:center; padding:2rem;
+    border-top:1px solid var(--border);
+    font-size:0.72rem; color:var(--grey);
+  }
+  .footer span { color:var(--gold); }
+
+  @media (max-width:768px) {
+    .stats-row { grid-template-columns:repeat(2,1fr); }
+    .features-grid { grid-template-columns:1fr; }
+    .screenshot-grid { grid-template-columns:1fr; }
+  }
+
+/* ── Cookie Consent Banner ── */
+#cookie-banner {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #0E1628;
+  border-top: 3px solid #A63255;
+  padding: 1rem 2rem;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  z-index: 99999;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
+  flex-wrap: wrap;
+}
+#cookie-banner.visible { display: flex; }
+#cookie-banner p {
+  font-size: 0.82rem; color: #6A7F9A;
+  line-height: 1.6; margin: 0; flex: 1; min-width: 200px;
+}
+#cookie-banner p a { color: #A63255; text-decoration: underline; }
+.cookie-buttons { display: flex; gap: 0.6rem; flex-shrink: 0; flex-wrap: wrap; }
+#cookie-accept {
+  background: #A63255; color: #F7F2EC; border: none;
+  padding: 0.5rem 1.1rem; font-size: 0.8rem; font-weight: 500;
+  cursor: pointer; font-family: inherit; border-radius: 2px;
+}
+#cookie-accept:hover { background: #C44D6D; }
+#cookie-necessary {
+  background: transparent; color: #F7F2EC;
+  border: 1px solid rgba(247,242,236,0.25);
+  padding: 0.5rem 1.1rem; font-size: 0.8rem;
+  cursor: pointer; font-family: inherit; border-radius: 2px;
+}
+#cookie-decline {
+  background: transparent; color: #6A7F9A;
+  border: 1px solid rgba(106,127,154,0.3);
+  padding: 0.5rem 1.1rem; font-size: 0.8rem;
+  cursor: pointer; font-family: inherit; border-radius: 2px;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo-area">
+    <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="10" fill="#0E1628"/>
+  <rect x="2" y="2" width="76" height="76" rx="9" fill="none" stroke="#A63255" stroke-width="1.5"/>
+  <text x="40" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#A63255" font-weight="bold" letter-spacing="2">YML</text>
+  <text x="40" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="6.5" fill="#6A7F9A" letter-spacing="1.5">YETTYMABS</text>
+  <line x1="16" y1="56" x2="64" y2="56" stroke="#A63255" stroke-width="0.75" opacity="0.4"/>
+  <circle cx="40" cy="62" r="2.5" fill="none" stroke="#A63255" stroke-width="1"/>
+  <circle cx="30" cy="62" r="1.5" fill="#6A7F9A" opacity="0.6"/>
+  <circle cx="50" cy="62" r="1.5" fill="#6A7F9A" opacity="0.6"/>
+</svg>
+    <div>
+      <div class="brand-name">YettyMabs Limited</div>
+      <div class="brand-sub">Portfolio | Microsoft 365</div>
+    </div>
+  </div>
+  <a href="https://outlook.office.com/book/YettyMabsLimited@yettymabs.com/s/oGTy5p7wU0iqLFqiPRSwLg2?ismsaljsauthenabled" class="header-cta">Book a Discovery Call</a>
+</header>
+
+<div class="hero">
+  <div style="margin-bottom:1.5rem;"><svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="10" fill="#0E1628"/>
+  <rect x="2" y="2" width="76" height="76" rx="9" fill="none" stroke="#A63255" stroke-width="1.5"/>
+  <text x="40" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#A63255" font-weight="bold" letter-spacing="2">YML</text>
+  <text x="40" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="6.5" fill="#6A7F9A" letter-spacing="1.5">YETTYMABS</text>
+  <line x1="16" y1="56" x2="64" y2="56" stroke="#A63255" stroke-width="0.75" opacity="0.4"/>
+  <circle cx="40" cy="62" r="2.5" fill="none" stroke="#A63255" stroke-width="1"/>
+  <circle cx="30" cy="62" r="1.5" fill="#6A7F9A" opacity="0.6"/>
+  <circle cx="50" cy="62" r="1.5" fill="#6A7F9A" opacity="0.6"/>
+</svg></div>
+  <div class="hero-tag">Case Study | SharePoint and Microsoft 365</div>
+  <h1>Building a Digital Home<br>for a <em>Multi-Location</em> Business</h1>
+  <p class="hero-desc">A growing business operating across the UK and internationally needed a central digital hub for its people. No single source of truth existed for news, documents, training or company information. YettyMabs Limited designed and built a full SharePoint intranet from scratch.</p>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Countries connected on one platform</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Core modules delivered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Staff adopted from day one</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">1</div>
+      <div class="stat-label">Central hub replacing fragmented tools</div>
+    </div>
+  </div>
+</div>
+
+<div class="gold-rule"></div>
+
+<!-- OVERVIEW -->
+<div class="section">
+  <div class="section-label">The Challenge</div>
+  <h2>One Business. <em>Three Countries.</em> No Central Hub.</h2>
+  <p class="section-desc">The client was a growing business with teams across the United Kingdom, South Africa and Ghana. Information was scattered across email threads and personal drives. New starters had no structured onboarding. Training resources were hard to find. There was no shared space for company news, team updates or documents.</p>
+
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('home-tab', this)">Home Page</button>
+    <button class="tab" onclick="switchTab('training-tab', this)">Training Hub</button>
+    <button class="tab" onclick="switchTab('library-tab', this)">Document Library</button>
+  </div>
+
+  <div id="home-tab" class="tab-content active">
+    <div class="showcase">
+      <div class="showcase-header">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-a"></div>
+        <div class="dot dot-g"></div>
+        <div class="showcase-title">sharepoint.com/sites/intranet/home</div>
+      </div>
+      <img src="intranet-home.png" alt="SharePoint intranet home page showing latest news, meet our team, useful applications, locations and times, upcoming events">
+    </div>
+    <p style="font-size:0.82rem;color:var(--grey);margin-top:0.75rem;">The home page gives every staff member an immediate view of company news, upcoming events, useful applications and time zone clocks for all three office locations.</p>
+  </div>
+
+  <div id="training-tab" class="tab-content">
+    <div class="showcase">
+      <div class="showcase-header">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-a"></div>
+        <div class="dot dot-g"></div>
+        <div class="showcase-title">sharepoint.com/sites/intranet/training</div>
+      </div>
+      <img src="intranet-training-hub.png" alt="SharePoint Training Hub page showing role-based training, health and safety, remote working etiquettes, personalised onboarding journeys and training leads">
+    </div>
+    <p style="font-size:0.82rem;color:var(--grey);margin-top:0.75rem;">The Training Hub provides role-based learning paths, health and safety guidance, remote working resources and personalised onboarding journeys for new starters.</p>
+  </div>
+
+  <div id="library-tab" class="tab-content">
+    <div class="showcase">
+      <div class="showcase-header">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-a"></div>
+        <div class="dot dot-g"></div>
+        <div class="showcase-title">sharepoint.com/sites/intranet/documents</div>
+      </div>
+      <img src="intranet-document-library.png" alt="SharePoint document library showing folders for Finance, HR, Innovations, IT and Marketing">
+    </div>
+    <p style="font-size:0.82rem;color:var(--grey);margin-top:0.75rem;">The Library organises all company documents by department, Finance, HR, Innovations, IT and Marketing, giving every team a controlled, searchable home for their files.</p>
+  </div>
+</div>
+
+<div class="gold-rule"></div>
+
+<!-- FEATURES -->
+<div class="section">
+  <div class="section-label">What Was Delivered</div>
+  <h2>Five Modules. <em>One Joined-Up</em> Experience.</h2>
+  <p class="section-desc">Each module was designed to solve a specific problem the business was experiencing, then built and configured within Microsoft 365 with adoption in mind from the start.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📰</div>
+      <div class="feature-title">News and Announcements</div>
+      <div class="feature-desc">A rolling news carousel on the home page keeps all staff updated with company news, product launches and leadership messages regardless of location.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📁</div>
+      <div class="feature-title">Document Library</div>
+      <div class="feature-desc">Departmental document libraries for Finance, HR, IT, Marketing and Innovations replace scattered personal drives with a structured, permission-controlled filing system.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👥</div>
+      <div class="feature-title">Staff Directory</div>
+      <div class="feature-desc">A visual people directory shows team members with names, photos and departments, making it easy for staff across three countries to know who to contact.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <div class="feature-title">Events Calendar</div>
+      <div class="feature-desc">A shared events calendar surfaces upcoming dates and company events for all staff, with time zone clocks showing local times for UK, South Africa and Ghana simultaneously.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <div class="feature-title">Quick Links and Applications</div>
+      <div class="feature-desc">Frequently used tools including Figma and Asana are surfaced on the home page, reducing the time staff spend searching for the applications they need every day.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎓</div>
+      <div class="feature-title">Training Hub</div>
+      <div class="feature-desc">Role-based learning paths, health and safety resources, remote working guidance and structured onboarding journeys give every new starter a clear path from day one.</div>
+    </div>
+  </div>
+</div>
+
+<div class="gold-rule"></div>
+
+<!-- SCOPE -->
+<div class="section">
+  <div class="section-label">How We Delivered It</div>
+  <h2>From Discovery <em>to Go-Live</em></h2>
+  <p class="section-desc">The engagement followed a structured delivery approach built around understanding the business first and building second.</p>
+
+  <table class="scope-table">
+    <thead>
+      <tr><th>Phase</th><th>Activity</th><th>Output</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Discovery</td><td>Stakeholder interviews with teams across UK, South Africa and Ghana. Requirements gathered per department.</td><td>Requirements specification</td></tr>
+      <tr><td>Information Architecture</td><td>Site structure designed, navigation planned, permissions model defined.</td><td>IA document and wireframes</td></tr>
+      <tr><td>Build</td><td>All 5 modules built and configured in SharePoint within Microsoft 365 tenant.</td><td>Fully functional intranet</td></tr>
+      <tr><td>Content Population</td><td>Initial content added across all departments, libraries structured, staff directory populated.</td><td>Launch-ready content</td></tr>
+      <tr><td>Training and Handover</td><td>Admin training delivered. User guide produced. Site handed over with documentation.</td><td>Admin guide and training session</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="gold-rule"></div>
+
+<!-- CTA -->
+<div class="section">
+  <div class="cta-strip">
+    <h3>Need an Intranet for <em>Your Organisation?</em></h3>
+    <p>Whether you are starting from scratch or improving an existing SharePoint site, we can help you design and build a digital workplace your people will actually use.</p>
+    <a href="https://outlook.office.com/book/YettyMabsLimited@yettymabs.com/s/oGTy5p7wU0iqLFqiPRSwLg2?ismsaljsauthenabled" class="cta-btn">Book a Free Discovery Call</a>
+  </div>
+</div>
+
+<footer class="footer">
+  Built by <span>YettyMabs Limited</span> &nbsp; · Microsoft 365 and SharePoint Consultancy · yettymabs.com
+</footer>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+
+</div>
+
+<!-- Cookie Consent Banner -->
+
+</div>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner" role="dialog" aria-label="Cookie consent">
+  <p>We use cookies to understand how visitors use our site. Choose which cookies to accept. See our <a href="/privacy.html">privacy policy</a>.</p>
+  <div class="cookie-buttons">
+    <button id="cookie-decline" type="button">Decline all</button>
+    <button id="cookie-necessary" type="button">Necessary only</button>
+    <button id="cookie-accept" type="button">Accept all</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='ym_cookie_consent';
+  var b=document.getElementById('cookie-banner');
+  var c=null;
+  try{c=localStorage.getItem(KEY);}catch(e){}
+  function loadGA(){
+    if(window._ga)return;window._ga=1;
+    var s=document.createElement('script');
+    s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id=G-MDVKEVTMCC';
+    document.head.appendChild(s);
+    window.dataLayer=window.dataLayer||[];
+    window.gtag=function(){dataLayer.push(arguments);};
+    gtag('js',new Date());gtag('config','G-MDVKEVTMCC');
+  }
+  if(c==='accepted'){loadGA();}
+  else if(!c){if(b)b.classList.add('visible');}
+  function wire(id,val,ga){
+    var el=document.getElementById(id);
+    if(!el)return;
+    el.addEventListener('click',function(){
+      try{localStorage.setItem(KEY,val);}catch(e){}
+      if(b)b.classList.remove('visible');
+      if(ga)loadGA();
+    });
+  }
+  wire('cookie-accept','accepted',true);
+  wire('cookie-necessary','necessary',false);
+  wire('cookie-decline','declined',false);
+})();
+</script>
+</body>
+</html>

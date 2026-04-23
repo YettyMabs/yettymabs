@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora | Executive Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --navy: #0A1020;
+    --navy2: #0A1020;
+    --navy3: #0E1628;
+    --gold: #A63255;
+    --gold2: #C44D6D;
+    --white: #F7F2EC;
+    --grey: #6A7F9A;
+    --grey2: #6A7F9A;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --amber: #A63255;
+    --blue: #3498db;
+    --card: rgba(15,32,64,0.95);
+    --border: rgba(166,50,85,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--navy2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--navy);
+    letter-spacing: 0.5px;
+  }
+
+  .company-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+
+  .company-sub {
+    font-size: 0.72rem;
+    color: var(--grey);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .header-center {
+    display: flex;
+    gap: 0.25rem;
+    background: rgba(0,0,0,0.3);
+    padding: 4px;
+    border-radius: 10px;
+  }
+
+  .tab-btn {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--grey);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .tab-btn.active {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  .tab-btn:hover:not(.active) {
+    color: var(--white);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .period-select {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .last-updated {
+    font-size: 0.75rem;
+    color: var(--grey);
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* MAIN */
+  .main {
+    padding: 1.5rem 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* KPI ROW */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .kpi-card:hover { border-color: rgba(166,50,85,0.4); }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 12px 12px 0 0;
+  }
+
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.red::before { background: var(--red); }
+  .kpi-card.amber::before { background: var(--amber); }
+  .kpi-card.blue::before { background: var(--blue); }
+
+  .kpi-label {
+    font-size: 0.72rem;
+    color: var(--grey);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .kpi-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .kpi-change {
+    font-size: 0.78rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .kpi-change.up { color: var(--green); }
+  .kpi-change.down { color: var(--red); }
+  .kpi-change.neutral { color: var(--grey); }
+
+  .kpi-sparkline {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    opacity: 0.4;
+  }
+
+  /* CHART GRID */
+  .chart-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .chart-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .chart-grid-32 {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .chart-grid-23 {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+  }
+
+  .chart-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+
+  .chart-sub {
+    font-size: 0.72rem;
+    color: var(--grey);
+    margin-bottom: 1rem;
+  }
+
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  /* TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  .data-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--grey);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(166,50,85,0.07);
+    color: var(--white);
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge.green { background: rgba(46,204,113,0.15); color: var(--green); }
+  .badge.red { background: rgba(231,76,60,0.15); color: var(--red); }
+  .badge.amber { background: rgba(243,156,18,0.15); color: var(--amber); }
+  .badge.blue { background: rgba(52,152,219,0.15); color: var(--blue); }
+
+  /* PROGRESS BAR */
+  .progress-item {
+    margin-bottom: 1rem;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    margin-bottom: 6px;
+    color: var(--white);
+  }
+
+  .progress-label span:last-child { color: var(--grey); }
+
+  .progress-track {
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+
+  /* DIVIDER */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-divider-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .section-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* GAUGE */
+  .gauge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 0;
+  }
+
+  .gauge-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-top: -40px;
+  }
+
+  .gauge-label {
+    font-size: 0.72rem;
+    color: var(--grey);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  /* WATERMARK */
+  .dashboard-footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.72rem;
+    color: var(--grey2);
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .dashboard-footer span { color: var(--gold); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--grey2); border-radius: 3px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .kpi-row { grid-template-columns: repeat(3, 1fr); }
+    .chart-grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    .header-center { display: none; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .chart-grid-2, .chart-grid-32, .chart-grid-23 { grid-template-columns: 1fr; }
+  }
+
+/* ── Cookie Consent Banner ── */
+#cookie-banner {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #0E1628;
+  border-top: 3px solid #A63255;
+  padding: 1rem 2rem;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  z-index: 99999;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
+  flex-wrap: wrap;
+}
+#cookie-banner.visible { display: flex; }
+#cookie-banner p {
+  font-size: 0.82rem; color: #6A7F9A;
+  line-height: 1.6; margin: 0; flex: 1; min-width: 200px;
+}
+#cookie-banner p a { color: #A63255; text-decoration: underline; }
+.cookie-buttons { display: flex; gap: 0.6rem; flex-shrink: 0; flex-wrap: wrap; }
+#cookie-accept {
+  background: #A63255; color: #F7F2EC; border: none;
+  padding: 0.5rem 1.1rem; font-size: 0.8rem; font-weight: 500;
+  cursor: pointer; font-family: inherit; border-radius: 2px;
+}
+#cookie-accept:hover { background: #C44D6D; }
+#cookie-necessary {
+  background: transparent; color: #F7F2EC;
+  border: 1px solid rgba(247,242,236,0.25);
+  padding: 0.5rem 1.1rem; font-size: 0.8rem;
+  cursor: pointer; font-family: inherit; border-radius: 2px;
+}
+#cookie-decline {
+  background: transparent; color: #6A7F9A;
+  border: 1px solid rgba(106,127,154,0.3);
+  padding: 0.5rem 1.1rem; font-size: 0.8rem;
+  cursor: pointer; font-family: inherit; border-radius: 2px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="10" fill="#0E1628"/>
+  <rect x="2" y="2" width="76" height="76" rx="9" fill="none" stroke="#A63255" stroke-width="1.5"/>
+  <text x="40" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#A63255" font-weight="bold" letter-spacing="2">YML</text>
+  <text x="40" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="6.5" fill="#6A7F9A" letter-spacing="1.5">YETTYMABS</text>
+  <line x1="16" y1="56" x2="64" y2="56" stroke="#A63255" stroke-width="0.75" opacity="0.4"/>
+  <circle cx="40" cy="62" r="2.5" fill="none" stroke="#A63255" stroke-width="1"/>
+  <circle cx="30" cy="62" r="1.5" fill="#6A7F9A" opacity="0.6"/>
+  <circle cx="50" cy="62" r="1.5" fill="#6A7F9A" opacity="0.6"/>
+</svg>
+    <div>
+      <div class="company-name">Nexora </div>
+      <div class="company-sub">Executive Intelligence Dashboard</div>
+    </div>
+  </div>
+  <div class="header-center">
+    <button class="tab-btn active" onclick="showPage('overview')">Overview</button>
+    <button class="tab-btn" onclick="showPage('sales')">Sales</button>
+    <button class="tab-btn" onclick="showPage('finance')">Finance</button>
+    <button class="tab-btn" onclick="showPage('aftermarket')">Aftermarket</button>
+    <button class="tab-btn" onclick="showPage('customer')">Customer</button>
+    <button class="tab-btn" onclick="showPage('operations')">Operations</button>
+  </div>
+  <div class="header-right">
+    <select class="period-select" onchange="updatePeriod(this.value)">
+      <option value="ytd">YTD 2026</option>
+      <option value="q1">Q1 2026</option>
+      <option value="q4">Q4 2025</option>
+      <option value="fy25">FY 2025</option>
+    </select>
+    <a href="https://outlook.office.com/book/YettyMabsLimited@yettymabs.com/s/oGTy5p7wU0iqLFqiPRSwLg2?ismsaljsauthenabled" target="_blank" rel="noopener" style="background:#A63255;color:#F7F2EC;padding:6px 14px;font-size:0.78rem;font-weight:500;text-decoration:none;border-radius:2px;white-space:nowrap;font-family:inherit;">Book a call</a>
+    <div class="last-updated"><span class="live-dot"></span>Updated 14 Mar 2026</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ═══ OVERVIEW PAGE ═══ -->
+  <div id="page-overview" class="page active">
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Revenue</div>
+        <div class="kpi-value">£42.8M</div>
+        <div class="kpi-change up">▲ 8.4% vs prior year</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Gross Margin</div>
+        <div class="kpi-value">34.2%</div>
+        <div class="kpi-change up">▲ 1.8pp improvement</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">EBITDA</div>
+        <div class="kpi-value">£6.1M</div>
+        <div class="kpi-change neutral">▶ On target</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-label">Customer Satisfaction</div>
+        <div class="kpi-value">87.3%</div>
+        <div class="kpi-change up">▲ 3.1% vs last quarter</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Open Service Tickets</div>
+        <div class="kpi-value">142</div>
+        <div class="kpi-change down">▼ 12 above target</div>
+      </div>
+    </div>
+
+    <div class="chart-grid-32">
+      <div class="chart-card">
+        <div class="chart-title">Revenue vs Target | Monthly</div>
+        <div class="chart-sub">Actual revenue against monthly target · £ millions</div>
+        <div class="chart-wrap" style="height:220px">
+          <canvas id="overviewRevChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Revenue by Department</div>
+        <div class="chart-sub">YTD contribution split</div>
+        <div class="chart-wrap" style="height:220px">
+          <canvas id="overviewDonut"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-grid-3">
+      <div class="chart-card">
+        <div class="chart-title">Department Performance</div>
+        <div class="chart-sub">% of target achieved YTD</div>
+        <div style="margin-top:0.5rem">
+          <div class="progress-item">
+            <div class="progress-label"><span>Sales</span><span>94%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:94%;background:#A63255"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Aftermarket</span><span>108%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:100%;background:#2ecc71"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Finance</span><span>101%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:100%;background:#2ecc71"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Operations</span><span>87%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:87%;background:#A63255"></div></div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label"><span>Customer Sat.</span><span>91%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:91%;background:#3498db"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Headcount by Function</div>
+        <div class="chart-sub">Current FTE distribution</div>
+        <div class="chart-wrap" style="height:200px">
+          <canvas id="headcountBar"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Key Alerts</div>
+        <div class="chart-sub">Items requiring attention</div>
+        <table class="data-table" style="margin-top:0.5rem">
+          <thead><tr><th>Area</th><th>Issue</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Operations</td><td>Inventory below safety stock</td><td><span class="badge red">Critical</span></td></tr>
+            <tr><td>Aftermarket</td><td>Ticket backlog up 18%</td><td><span class="badge amber">Review</span></td></tr>
+            <tr><td>Sales</td><td>3 accounts at renewal risk</td><td><span class="badge amber">Review</span></td></tr>
+            <tr><td>Finance</td><td>Q2 budget reforecast due</td><td><span class="badge blue">Info</span></td></tr>
+            <tr><td>Customer</td><td>NPS target exceeded</td><td><span class="badge green">On Track</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SALES PAGE ═══ -->
+  <div id="page-sales" class="page">
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label">Total Sales Revenue</div><div class="kpi-value">£18.4M</div><div class="kpi-change up">▲ 6.2% YoY</div></div>
+      <div class="kpi-card green"><div class="kpi-label">New Business Won</div><div class="kpi-value">£4.1M</div><div class="kpi-change up">▲ 22% vs target</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Pipeline Value</div><div class="kpi-value">£9.7M</div><div class="kpi-change neutral">▶ 3 deals closing</div></div>
+      <div class="kpi-card"><div class="kpi-label">Win Rate</div><div class="kpi-value">38%</div><div class="kpi-change up">▲ 4pp improvement</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">Avg Deal Size</div><div class="kpi-value">£82K</div><div class="kpi-change up">▲ £7K vs last year</div></div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Monthly Sales Performance</div>
+        <div class="chart-sub">Actual vs Target vs Prior Year · £000s</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="salesMonthly"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Sales by Product Line</div>
+        <div class="chart-sub">YTD revenue by category</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="salesProduct"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-grid-32">
+      <div class="chart-card">
+        <div class="chart-title">Top 10 Accounts by Revenue</div>
+        <div class="chart-sub">YTD · includes renewal status</div>
+        <table class="data-table">
+          <thead><tr><th>Account</th><th>Sector</th><th>Revenue</th><th>vs Target</th><th>Renewal</th></tr></thead>
+          <tbody>
+            <tr><td>Ashford Group</td><td>Automotive</td><td>£1.82M</td><td><span class="badge green">+12%</span></td><td><span class="badge green">Secured</span></td></tr>
+            <tr><td>Pembridge Industries</td><td>Aerospace</td><td>£1.54M</td><td><span class="badge green">+8%</span></td><td><span class="badge green">Secured</span></td></tr>
+            <tr><td>Clifton Systems</td><td>Defence</td><td>£1.21M</td><td><span class="badge amber">-2%</span></td><td><span class="badge amber">At Risk</span></td></tr>
+            <tr><td>Radmore Engineering</td><td>Rail</td><td>£980K</td><td><span class="badge green">+5%</span></td><td><span class="badge blue">Q3 Due</span></td></tr>
+            <tr><td>Hartwell Components</td><td>Energy</td><td>£876K</td><td><span class="badge green">+19%</span></td><td><span class="badge green">Secured</span></td></tr>
+            <tr><td>Vantage Precision</td><td>Medical</td><td>£743K</td><td><span class="badge amber">-5%</span></td><td><span class="badge red">At Risk</span></td></tr>
+            <tr><td>Stoneleigh Tech</td><td>Automotive</td><td>£692K</td><td><span class="badge green">+3%</span></td><td><span class="badge blue">Q4 Due</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Pipeline by Stage</div>
+        <div class="chart-sub">Current active opportunities</div>
+        <div class="chart-wrap" style="height:200px">
+          <canvas id="pipelineChart"></canvas>
+        </div>
+        <div style="margin-top:1rem">
+          <div class="progress-item"><div class="progress-label"><span>Qualify</span><span>£2.1M · 8 deals</span></div><div class="progress-track"><div class="progress-fill" style="width:55%;background:#3498db"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Propose</span><span>£3.4M · 5 deals</span></div><div class="progress-track"><div class="progress-fill" style="width:75%;background:#A63255"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Negotiate</span><span>£2.8M · 3 deals</span></div><div class="progress-track"><div class="progress-fill" style="width:85%;background:#A63255"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Close</span><span>£1.4M · 2 deals</span></div><div class="progress-track"><div class="progress-fill" style="width:95%;background:#2ecc71"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FINANCE PAGE ═══ -->
+  <div id="page-finance" class="page">
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-label">Total Revenue</div><div class="kpi-value">£42.8M</div><div class="kpi-change up">▲ 8.4% YoY</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Gross Profit</div><div class="kpi-value">£14.6M</div><div class="kpi-change up">▲ 34.2% margin</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Operating Costs</div><div class="kpi-value">£8.5M</div><div class="kpi-change down">▲ 2.1% over budget</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">EBITDA</div><div class="kpi-value">£6.1M</div><div class="kpi-change neutral">▶ 14.3% margin</div></div>
+      <div class="kpi-card"><div class="kpi-label">Cash Position</div><div class="kpi-value">£3.2M</div><div class="kpi-change up">▲ Strong liquidity</div></div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Revenue vs Expenditure</div>
+        <div class="chart-sub">Monthly comparison · £ millions</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="finRevEx"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Budget Variance by Cost Centre</div>
+        <div class="chart-sub">Actual vs Budget YTD · £000s</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="budgetVariance"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-grid-3">
+      <div class="chart-card">
+        <div class="chart-title">Cost Breakdown</div>
+        <div class="chart-sub">Operating cost distribution YTD</div>
+        <div class="chart-wrap" style="height:180px">
+          <canvas id="costBreakdown"></canvas>
+        </div>
+      </div>
+      <div class="chart-card" style="grid-column: span 2">
+        <div class="chart-title">P&amp;L Summary</div>
+        <div class="chart-sub">YTD vs Prior Year vs Budget · £000s</div>
+        <table class="data-table">
+          <thead><tr><th>Line Item</th><th>YTD Actual</th><th>YTD Budget</th><th>Variance</th><th>Prior Year</th><th>YoY</th></tr></thead>
+          <tbody>
+            <tr><td>Revenue</td><td>£42,840K</td><td>£41,200K</td><td><span class="badge green">+£1,640K</span></td><td>£39,520K</td><td><span class="badge green">+8.4%</span></td></tr>
+            <tr><td>Cost of Goods</td><td>£28,196K</td><td>£27,592K</td><td><span class="badge red">-£604K</span></td><td>£26,870K</td><td><span class="badge amber">+4.9%</span></td></tr>
+            <tr><td>Gross Profit</td><td>£14,644K</td><td>£13,608K</td><td><span class="badge green">+£1,036K</span></td><td>£12,650K</td><td><span class="badge green">+15.8%</span></td></tr>
+            <tr><td>Operating Costs</td><td>£8,520K</td><td>£8,344K</td><td><span class="badge amber">-£176K</span></td><td>£8,120K</td><td><span class="badge amber">+4.9%</span></td></tr>
+            <tr><td><strong>EBITDA</strong></td><td><strong>£6,124K</strong></td><td><strong>£5,264K</strong></td><td><span class="badge green"><strong>+£860K</strong></span></td><td><strong>£4,530K</strong></td><td><span class="badge green"><strong>+35.2%</strong></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ AFTERMARKET PAGE ═══ -->
+  <div id="page-aftermarket" class="page">
+    <div class="kpi-row">
+      <div class="kpi-card green"><div class="kpi-label">Service Revenue</div><div class="kpi-value">£7.2M</div><div class="kpi-change up">▲ 108% of target</div></div>
+      <div class="kpi-card"><div class="kpi-label">Active Contracts</div><div class="kpi-value">284</div><div class="kpi-change up">▲ 22 new this quarter</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Open Tickets</div><div class="kpi-value">142</div><div class="kpi-change down">▼ 12 above SLA target</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">First Fix Rate</div><div class="kpi-value">76%</div><div class="kpi-change up">▲ 4% improvement</div></div>
+      <div class="kpi-card"><div class="kpi-label">Avg Resolution Time</div><div class="kpi-value">4.2h</div><div class="kpi-change neutral">▶ Target 4.0h</div></div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Ticket Volume by Month</div>
+        <div class="chart-sub">Open, resolved and escalated tickets</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="ticketVolume"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">SLA Compliance by Priority</div>
+        <div class="chart-sub">% tickets resolved within SLA window</div>
+        <div style="margin-top:1rem">
+          <div class="progress-item"><div class="progress-label"><span>P1 Critical (4hr SLA)</span><span>82%</span></div><div class="progress-track"><div class="progress-fill" style="width:82%;background:#e74c3c"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>P2 High (8hr SLA)</span><span>91%</span></div><div class="progress-track"><div class="progress-fill" style="width:91%;background:#A63255"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>P3 Medium (24hr SLA)</span><span>96%</span></div><div class="progress-track"><div class="progress-fill" style="width:96%;background:#A63255"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>P4 Low (72hr SLA)</span><span>99%</span></div><div class="progress-track"><div class="progress-fill" style="width:99%;background:#2ecc71"></div></div></div>
+        </div>
+        <div class="chart-title" style="margin-top:1.5rem">Contract Renewal Rate</div>
+        <div class="chart-sub" style="margin-bottom:0.75rem">Last 12 months</div>
+        <div class="progress-item"><div class="progress-label"><span>Standard Contracts</span><span>88%</span></div><div class="progress-track"><div class="progress-fill" style="width:88%;background:#3498db"></div></div></div>
+        <div class="progress-item"><div class="progress-label"><span>Premium Contracts</span><span>94%</span></div><div class="progress-track"><div class="progress-fill" style="width:94%;background:#2ecc71"></div></div></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Open Tickets by Engineer</div>
+      <div class="chart-sub">Current workload distribution</div>
+      <table class="data-table">
+        <thead><tr><th>Engineer</th><th>Region</th><th>Open</th><th>Overdue</th><th>Avg Resolution</th><th>Satisfaction</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>James Whitfield</td><td>North</td><td>18</td><td>2</td><td>3.8h</td><td>4.7/5</td><td><span class="badge green">On Track</span></td></tr>
+          <tr><td>Priya Sharma</td><td>Midlands</td><td>24</td><td>5</td><td>4.6h</td><td>4.4/5</td><td><span class="badge amber">High Load</span></td></tr>
+          <tr><td>Tom Baxter</td><td>South</td><td>21</td><td>3</td><td>4.1h</td><td>4.6/5</td><td><span class="badge green">On Track</span></td></tr>
+          <tr><td>Amara Osei</td><td>East</td><td>31</td><td>8</td><td>5.2h</td><td>4.1/5</td><td><span class="badge red">Overloaded</span></td></tr>
+          <tr><td>Rachel Chen</td><td>West</td><td>16</td><td>1</td><td>3.5h</td><td>4.9/5</td><td><span class="badge green">On Track</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ CUSTOMER PAGE ═══ -->
+  <div id="page-customer" class="page">
+    <div class="kpi-row">
+      <div class="kpi-card green"><div class="kpi-label">Overall CSAT</div><div class="kpi-value">87.3%</div><div class="kpi-change up">▲ 3.1pp improvement</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">NPS Score</div><div class="kpi-value">+52</div><div class="kpi-change up">▲ 8 points vs last quarter</div></div>
+      <div class="kpi-card"><div class="kpi-label">Responses Collected</div><div class="kpi-value">1,284</div><div class="kpi-change up">▲ 18% response rate</div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Detractors</div><div class="kpi-value">8.2%</div><div class="kpi-change down">▼ Target 6%</div></div>
+      <div class="kpi-card"><div class="kpi-label">Retention Rate</div><div class="kpi-value">91.4%</div><div class="kpi-change up">▲ 1.2pp improvement</div></div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title">CSAT Trend | 12 Months</div>
+        <div class="chart-sub">Overall satisfaction score monthly</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="csatTrend"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">NPS Breakdown</div>
+        <div class="chart-sub">Promoters, Passives and Detractors</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="npsChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-grid-32">
+      <div class="chart-card">
+        <div class="chart-title">CSAT by Category</div>
+        <div class="chart-sub">Satisfaction scores across touchpoints</div>
+        <div class="chart-wrap" style="height:200px">
+          <canvas id="csatCategory"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Top Complaint Categories</div>
+        <div class="chart-sub">Q1 2026 feedback themes</div>
+        <div style="margin-top:0.5rem">
+          <div class="progress-item"><div class="progress-label"><span>Delivery timescales</span><span>34%</span></div><div class="progress-track"><div class="progress-fill" style="width:34%;background:#e74c3c"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Response time</span><span>24%</span></div><div class="progress-track"><div class="progress-fill" style="width:24%;background:#A63255"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Product quality</span><span>18%</span></div><div class="progress-track"><div class="progress-fill" style="width:18%;background:#A63255"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Communication</span><span>14%</span></div><div class="progress-track"><div class="progress-fill" style="width:14%;background:#3498db"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Invoicing errors</span><span>10%</span></div><div class="progress-track"><div class="progress-fill" style="width:10%;background:#6A7F9A"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ OPERATIONS PAGE ═══ -->
+  <div id="page-operations" class="page">
+    <div class="kpi-row">
+      <div class="kpi-card amber"><div class="kpi-label">OEE Score</div><div class="kpi-value">78.4%</div><div class="kpi-change down">▼ Target 85%</div></div>
+      <div class="kpi-card green"><div class="kpi-label">Units Produced</div><div class="kpi-value">48,240</div><div class="kpi-change up">▲ 6.8% vs plan</div></div>
+      <div class="kpi-card red"><div class="kpi-label">Inventory vs Safety Stock</div><div class="kpi-value">84%</div><div class="kpi-change down">▼ 3 SKUs critical</div></div>
+      <div class="kpi-card blue"><div class="kpi-label">On-Time Delivery</div><div class="kpi-value">91.2%</div><div class="kpi-change up">▲ 2.4pp improvement</div></div>
+      <div class="kpi-card"><div class="kpi-label">Defect Rate</div><div class="kpi-value">1.8%</div><div class="kpi-change up">▲ Improving trend</div></div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Production Output vs Plan</div>
+        <div class="chart-sub">Units produced vs planned monthly</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="productionChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Inventory Levels by Category</div>
+        <div class="chart-sub">Current stock vs safety stock threshold</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="inventoryChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-grid-3">
+      <div class="chart-card">
+        <div class="chart-title">OEE Components</div>
+        <div class="chart-sub">Availability, Performance, Quality</div>
+        <div style="margin-top:0.5rem">
+          <div class="progress-item"><div class="progress-label"><span>Availability</span><span>88.2%</span></div><div class="progress-track"><div class="progress-fill" style="width:88%;background:#2ecc71"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Performance</span><span>82.4%</span></div><div class="progress-track"><div class="progress-fill" style="width:82%;background:#A63255"></div></div></div>
+          <div class="progress-item"><div class="progress-label"><span>Quality</span><span>98.2%</span></div><div class="progress-track"><div class="progress-fill" style="width:98%;background:#3498db"></div></div></div>
+          <div class="progress-item" style="margin-top:1rem"><div class="progress-label"><span><strong>Overall OEE</strong></span><span><strong>78.4%</strong></span></div><div class="progress-track" style="height:10px"><div class="progress-fill" style="width:78%;background:#A63255;height:10px"></div></div></div>
+        </div>
+      </div>
+      <div class="chart-card" style="grid-column:span 2">
+        <div class="chart-title">Critical Inventory Alerts</div>
+        <div class="chart-sub">SKUs below or approaching safety stock level</div>
+        <table class="data-table">
+          <thead><tr><th>SKU</th><th>Description</th><th>Current Stock</th><th>Safety Stock</th><th>Days Cover</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>SKU-4821</td><td>Bearing Assembly A12</td><td>142 units</td><td>200 units</td><td>4.2 days</td><td><span class="badge red">Critical</span></td></tr>
+            <tr><td>SKU-3304</td><td>Hydraulic Seal Set</td><td>88 units</td><td>150 units</td><td>3.8 days</td><td><span class="badge red">Critical</span></td></tr>
+            <tr><td>SKU-7712</td><td>Control PCB Module</td><td>31 units</td><td>50 units</td><td>5.1 days</td><td><span class="badge red">Critical</span></td></tr>
+            <tr><td>SKU-2198</td><td>Drive Shaft Coupling</td><td>224 units</td><td>250 units</td><td>8.4 days</td><td><span class="badge amber">Low</span></td></tr>
+            <tr><td>SKU-5540</td><td>Filter Cartridge F3</td><td>410 units</td><td>400 units</td><td>12.1 days</td><td><span class="badge green">OK</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="dashboard-footer" style="display:flex;align-items:center;justify-content:center;gap:1rem;">
+  <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="10" fill="#0E1628"/>
+  <rect x="2" y="2" width="76" height="76" rx="9" fill="none" stroke="#A63255" stroke-width="1.5"/>
+  <text x="40" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#A63255" font-weight="bold" letter-spacing="2">YML</text>
+  <text x="40" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="6.5" fill="#6A7F9A" letter-spacing="1.5">YETTYMABS</text>
+  <line x1="16" y1="56" x2="64" y2="56" stroke="#A63255" stroke-width="0.75" opacity="0.4"/>
+  <circle cx="40" cy="62" r="2.5" fill="none" stroke="#A63255" stroke-width="1"/>
+  <circle cx="30" cy="62" r="1.5" fill="#6A7F9A" opacity="0.6"/>
+  <circle cx="50" cy="62" r="1.5" fill="#6A7F9A" opacity="0.6"/>
+</svg> &nbsp; Sample dashboard created by <span>YettyMabs Limited</span> · Business Analysis and Digital Transformation · yettymabs.com
+</div>
+
+
+</div>
+
+<!-- Cookie Consent Banner -->
+
+</div>
+
+<script>
+(function() {
+  if (typeof Chart === 'undefined') return;
+
+  var ROSE = '#A63255';
+  var ROSE2 = '#C44D6D';
+  var GREY = 'rgba(106,127,154,0.15)';
+  var IVORY = '#F7F2EC';
+  var GREEN = '#2ecc71';
+  var RED = '#e74c3c';
+  var BLUE = '#3498db';
+  var AMBER = '#f39c12';
+  var months = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+
+  var defaults = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: '#6A7F9A', font: { size: 11 } } } },
+    scales: {
+      x: { ticks: { color: '#6A7F9A', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+      y: { ticks: { color: '#6A7F9A', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } }
+    }
+  };
+
+  function lineChart(id, labels, datasets) {
+    var el = document.getElementById(id); if (!el) return;
+    new Chart(el, { type:'line', data:{ labels:labels, datasets:datasets }, options: JSON.parse(JSON.stringify(defaults)) });
+  }
+  function barChart(id, labels, datasets, opts) {
+    var el = document.getElementById(id); if (!el) return;
+    var o = JSON.parse(JSON.stringify(defaults));
+    if (opts) Object.assign(o, opts);
+    new Chart(el, { type:'bar', data:{ labels:labels, datasets:datasets }, options: o });
+  }
+  function donut(id, labels, data, colors) {
+    var el = document.getElementById(id); if (!el) return;
+    new Chart(el, { type:'doughnut', data:{ labels:labels, datasets:[{ data:data, backgroundColor:colors, borderWidth:0 }] },
+      options:{ responsive:true, maintainAspectRatio:false, cutout:'65%',
+        plugins:{ legend:{ position:'right', labels:{ color:'#6A7F9A', font:{size:10}, boxWidth:10 } } } }});
+  }
+
+  // ── OVERVIEW ──
+  lineChart('overviewRevChart', months,
+    [{ label:'Actual', data:[3.1,3.4,3.6,3.2,3.8,4.1,4.0,3.9,4.2,4.5,4.3,4.7], borderColor:ROSE, backgroundColor:'rgba(166,50,85,0.1)', fill:true, tension:0.4, pointRadius:3 },
+     { label:'Target', data:[3.2,3.3,3.5,3.5,3.7,3.9,4.0,4.0,4.1,4.2,4.3,4.5], borderColor:'rgba(106,127,154,0.5)', borderDash:[4,4], pointRadius:0, fill:false }]);
+
+  donut('overviewDonut',
+    ['Sales','Finance','Aftermarket','Operations','Customer'],
+    [43, 22, 17, 11, 7],
+    [ROSE, ROSE2, BLUE, AMBER, GREEN]);
+
+  barChart('headcountBar', ['Sales','Finance','Ops','Marketing','IT','HR','Legal'],
+    [{ label:'FTE', data:[42,18,35,12,9,7,5], backgroundColor:[ROSE,ROSE2,BLUE,AMBER,GREEN,'rgba(166,50,85,0.4)','rgba(106,127,154,0.4)'] }],
+    { plugins:{ legend:{ display:false } } });
+
+  // ── SALES ──
+  lineChart('salesMonthly', months,
+    [{ label:'Actual', data:[1380,1520,1650,1420,1680,1810,1760,1720,1850,1980,1890,2070], borderColor:ROSE, fill:false, tension:0.4, pointRadius:3 },
+     { label:'Target', data:[1400,1450,1550,1550,1600,1700,1720,1720,1800,1850,1900,1950], borderColor:'rgba(106,127,154,0.5)', borderDash:[4,4], pointRadius:0, fill:false },
+     { label:'Prior Year', data:[1200,1320,1410,1350,1480,1590,1560,1540,1660,1750,1700,1850], borderColor:'rgba(106,127,154,0.3)', borderDash:[2,2], pointRadius:0, fill:false }]);
+
+  barChart('salesProduct', ['Enterprise
+Software','Managed
+Services','Hardware','Training
+& Support','Consulting'],
+    [{ label:'Revenue £000s', data:[6840,4290,3580,2460,1230], backgroundColor:[ROSE,ROSE2,BLUE,AMBER,GREEN] }],
+    { plugins:{ legend:{ display:false } }, indexAxis:'y' });
+
+  donut('pipelineChart', ['Qualify','Propose','Negotiate','Close'],
+    [2100,1800,1400,2400], [AMBER,BLUE,ROSE2,GREEN]);
+
+  // ── FINANCE ──
+  barChart('finRevEx', months,
+    [{ label:'Revenue', data:[3.1,3.4,3.6,3.2,3.8,4.1,4.0,3.9,4.2,4.5,4.3,4.7], backgroundColor:ROSE },
+     { label:'Expenditure', data:[2.4,2.6,2.7,2.5,2.8,3.0,2.9,2.8,3.0,3.1,3.0,3.1], backgroundColor:'rgba(106,127,154,0.4)' }]);
+
+  barChart('budgetVariance', ['Salaries','Marketing','IT Infra','Travel','Facilities','Other'],
+    [{ label:'Variance vs Budget £000s', data:[-12,18,-8,32,-5,22], backgroundColor:function(ctx){ return ctx.dataset.data[ctx.dataIndex] < 0 ? RED : GREEN; } }],
+    { plugins:{ legend:{ display:false } }, indexAxis:'y' });
+
+  donut('costBreakdown', ['Salaries','Marketing','IT','Facilities','Travel','Other'],
+    [52,14,12,9,7,6], [ROSE,BLUE,AMBER,GREEN,ROSE2,'rgba(106,127,154,0.5)']);
+
+  // ── AFTERMARKET ──
+  barChart('ticketVolume', months,
+    [{ label:'Opened', data:[280,310,295,340,320,290,350,380,360,320,345,390], backgroundColor:ROSE },
+     { label:'Resolved', data:[260,290,280,315,305,275,335,360,340,300,325,370], backgroundColor:GREEN },
+     { label:'Escalated', data:[18,22,15,25,20,16,28,32,24,18,22,30], backgroundColor:RED }]);
+
+  donut('pipelineChart2', ['On Track','At Risk','Critical'], [68,22,10], [GREEN,AMBER,RED]);
+
+  // ── CUSTOMER ──
+  lineChart('csatTrend', months,
+    [{ label:'CSAT %', data:[84,83,85,86,84,87,86,87,88,87,88,87], borderColor:ROSE, fill:false, tension:0.4, pointRadius:3 }]);
+
+  donut('npsChart', ['Promoters','Passives','Detractors'], [62,25,13], [GREEN,AMBER,RED]);
+
+  barChart('csatCategory', ['Product
+Quality','Support
+Speed','Account
+Management','Delivery','Billing'],
+    [{ label:'Score /10', data:[8.4,8.7,8.9,8.1,8.6], backgroundColor:[ROSE,ROSE2,GREEN,BLUE,AMBER] }],
+    { plugins:{ legend:{ display:false } } });
+
+  // ── OPERATIONS ──
+  lineChart('productionChart', months,
+    [{ label:'Actual Units', data:[3820,4010,4150,3920,4280,4410,4300,4180,4420,4590,4480,4620], borderColor:ROSE, fill:false, tension:0.4, pointRadius:3 },
+     { label:'Plan', data:[3900,3900,4000,4000,4200,4300,4300,4200,4400,4500,4500,4600], borderColor:'rgba(106,127,154,0.5)', borderDash:[4,4], pointRadius:0, fill:false }]);
+
+  barChart('inventoryChart', ['Raw
+Materials','WIP','Finished
+Goods','Spare
+Parts'],
+    [{ label:'Current Stock', data:[84,72,91,68], backgroundColor:function(ctx){ var v=ctx.dataset.data[ctx.dataIndex]; return v<75?RED:(v<85?AMBER:GREEN); } },
+     { label:'Safety Stock', data:[80,80,80,80], backgroundColor:'rgba(106,127,154,0.3)' }]);
+
+})();
+</script>
+<!-- Cookie Banner -->
+<div id="cookie-banner" role="dialog" aria-label="Cookie consent">
+  <p>We use cookies to understand how visitors use our site. Choose which cookies to accept. See our <a href="/privacy.html">privacy policy</a>.</p>
+  <div class="cookie-buttons">
+    <button id="cookie-decline" type="button">Decline all</button>
+    <button id="cookie-necessary" type="button">Necessary only</button>
+    <button id="cookie-accept" type="button">Accept all</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='ym_cookie_consent';
+  var b=document.getElementById('cookie-banner');
+  var c=null;
+  try{c=localStorage.getItem(KEY);}catch(e){}
+  function loadGA(){
+    if(window._ga)return;window._ga=1;
+    var s=document.createElement('script');
+    s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id=G-MDVKEVTMCC';
+    document.head.appendChild(s);
+    window.dataLayer=window.dataLayer||[];
+    window.gtag=function(){dataLayer.push(arguments);};
+    gtag('js',new Date());gtag('config','G-MDVKEVTMCC');
+  }
+  if(c==='accepted'){loadGA();}
+  else if(!c){if(b)b.classList.add('visible');}
+  function wire(id,val,ga){
+    var el=document.getElementById(id);
+    if(!el)return;
+    el.addEventListener('click',function(){
+      try{localStorage.setItem(KEY,val);}catch(e){}
+      if(b)b.classList.remove('visible');
+      if(ga)loadGA();
+    });
+  }
+  wire('cookie-accept','accepted',true);
+  wire('cookie-necessary','necessary',false);
+  wire('cookie-decline','declined',false);
+})();
+</script>
+</body>
+</html>
