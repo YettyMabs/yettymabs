@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nexora | Executive Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   :root {
     --navy: #0A1020;
@@ -241,6 +240,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-bottom: 1rem;
+    align-items: stretch;
   }
 
   .chart-grid-3 {
@@ -248,6 +248,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
     margin-bottom: 1rem;
+    align-items: stretch;
   }
 
   .chart-grid-32 {
@@ -255,6 +256,7 @@
     grid-template-columns: 3fr 2fr;
     gap: 1rem;
     margin-bottom: 1rem;
+    align-items: stretch;
   }
 
   .chart-grid-23 {
@@ -262,13 +264,16 @@
     grid-template-columns: 2fr 3fr;
     gap: 1rem;
     margin-bottom: 1rem;
-  }
+  
+    align-items: stretch;}
 
   .chart-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1.2rem 1.4rem;
+    display: flex;
+    flex-direction: column;
   }
 
   .chart-title {
@@ -290,6 +295,9 @@
   .chart-wrap {
     position: relative;
     width: 100%;
+    min-height: 200px;
+    height: 100%;
+    flex: 1;
   }
 
   /* TABLE */
@@ -436,7 +444,8 @@
   @media (max-width: 768px) {
     .header-center { display: none; }
     .kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .chart-grid-2, .chart-grid-32, .chart-grid-23 { grid-template-columns: 1fr; }
+    .chart-grid-2, .chart-grid-32, .chart-grid-23 { grid-template-columns: 1fr; 
+    align-items: stretch;}
   }
 
 /* ── Cookie Consent Banner ── */
@@ -528,28 +537,28 @@
     <div class="kpi-row">
       <div class="kpi-card">
         <div class="kpi-label">Total Revenue</div>
-        <div class="kpi-value">£42.8M</div>
-        <div class="kpi-change up">▲ 8.4% vs prior year</div>
+        <div class="kpi-value" id="kpi-rev">£42.8M</div>
+        <div class="kpi-change up" id="kpi-rev-chg">▲ 8.4% vs prior year</div>
       </div>
       <div class="kpi-card green">
         <div class="kpi-label">Gross Margin</div>
-        <div class="kpi-value">34.2%</div>
-        <div class="kpi-change up">▲ 1.8pp improvement</div>
+        <div class="kpi-value" id="kpi-margin">34.2%</div>
+        <div class="kpi-change up" id="kpi-margin-chg">▲ 1.8pp improvement</div>
       </div>
       <div class="kpi-card amber">
         <div class="kpi-label">EBITDA</div>
-        <div class="kpi-value">£6.1M</div>
+        <div class="kpi-value" id="kpi-ebitda">£6.1M</div>
         <div class="kpi-change neutral">▶ On target</div>
       </div>
       <div class="kpi-card blue">
         <div class="kpi-label">Customer Satisfaction</div>
-        <div class="kpi-value">87.3%</div>
-        <div class="kpi-change up">▲ 3.1% vs last quarter</div>
+        <div class="kpi-value" id="kpi-csat">87.3%</div>
+        <div class="kpi-change up" id="kpi-csat-chg">▲ 3.1% vs last quarter</div>
       </div>
       <div class="kpi-card red">
         <div class="kpi-label">Open Service Tickets</div>
-        <div class="kpi-value">142</div>
-        <div class="kpi-change down">▼ 12 above target</div>
+        <div class="kpi-value" id="kpi-tickets">142</div>
+        <div class="kpi-change down" id="kpi-tickets-chg">▼ 12 above target</div>
       </div>
     </div>
 
@@ -909,123 +918,6 @@
 
 </div>
 
-<script>
-(function() {
-  if (typeof Chart === 'undefined') return;
-
-  var ROSE = '#A63255';
-  var ROSE2 = '#C44D6D';
-  var GREY = 'rgba(106,127,154,0.15)';
-  var IVORY = '#F7F2EC';
-  var GREEN = '#2ecc71';
-  var RED = '#e74c3c';
-  var BLUE = '#3498db';
-  var AMBER = '#f39c12';
-  var months = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
-
-  var defaults = {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { labels: { color: '#6A7F9A', font: { size: 11 } } } },
-    scales: {
-      x: { ticks: { color: '#6A7F9A', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
-      y: { ticks: { color: '#6A7F9A', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } }
-    }
-  };
-
-  function lineChart(id, labels, datasets) {
-    var el = document.getElementById(id); if (!el) return;
-    new Chart(el, { type:'line', data:{ labels:labels, datasets:datasets }, options: JSON.parse(JSON.stringify(defaults)) });
-  }
-  function barChart(id, labels, datasets, opts) {
-    var el = document.getElementById(id); if (!el) return;
-    var o = JSON.parse(JSON.stringify(defaults));
-    if (opts) Object.assign(o, opts);
-    new Chart(el, { type:'bar', data:{ labels:labels, datasets:datasets }, options: o });
-  }
-  function donut(id, labels, data, colors) {
-    var el = document.getElementById(id); if (!el) return;
-    new Chart(el, { type:'doughnut', data:{ labels:labels, datasets:[{ data:data, backgroundColor:colors, borderWidth:0 }] },
-      options:{ responsive:true, maintainAspectRatio:false, cutout:'65%',
-        plugins:{ legend:{ position:'right', labels:{ color:'#6A7F9A', font:{size:10}, boxWidth:10 } } } }});
-  }
-
-  // ── OVERVIEW ──
-  lineChart('overviewRevChart', months,
-    [{ label:'Actual', data:[3.1,3.4,3.6,3.2,3.8,4.1,4.0,3.9,4.2,4.5,4.3,4.7], borderColor:ROSE, backgroundColor:'rgba(166,50,85,0.1)', fill:true, tension:0.4, pointRadius:3 },
-     { label:'Target', data:[3.2,3.3,3.5,3.5,3.7,3.9,4.0,4.0,4.1,4.2,4.3,4.5], borderColor:'rgba(106,127,154,0.5)', borderDash:[4,4], pointRadius:0, fill:false }]);
-
-  donut('overviewDonut',
-    ['Sales','Finance','Aftermarket','Operations','Customer'],
-    [43, 22, 17, 11, 7],
-    [ROSE, ROSE2, BLUE, AMBER, GREEN]);
-
-  barChart('headcountBar', ['Sales','Finance','Ops','Marketing','IT','HR','Legal'],
-    [{ label:'FTE', data:[42,18,35,12,9,7,5], backgroundColor:[ROSE,ROSE2,BLUE,AMBER,GREEN,'rgba(166,50,85,0.4)','rgba(106,127,154,0.4)'] }],
-    { plugins:{ legend:{ display:false } } });
-
-  // ── SALES ──
-  lineChart('salesMonthly', months,
-    [{ label:'Actual', data:[1380,1520,1650,1420,1680,1810,1760,1720,1850,1980,1890,2070], borderColor:ROSE, fill:false, tension:0.4, pointRadius:3 },
-     { label:'Target', data:[1400,1450,1550,1550,1600,1700,1720,1720,1800,1850,1900,1950], borderColor:'rgba(106,127,154,0.5)', borderDash:[4,4], pointRadius:0, fill:false },
-     { label:'Prior Year', data:[1200,1320,1410,1350,1480,1590,1560,1540,1660,1750,1700,1850], borderColor:'rgba(106,127,154,0.3)', borderDash:[2,2], pointRadius:0, fill:false }]);
-
-  barChart('salesProduct', ['Enterprise
-Software','Managed
-Services','Hardware','Training
-& Support','Consulting'],
-    [{ label:'Revenue £000s', data:[6840,4290,3580,2460,1230], backgroundColor:[ROSE,ROSE2,BLUE,AMBER,GREEN] }],
-    { plugins:{ legend:{ display:false } }, indexAxis:'y' });
-
-  donut('pipelineChart', ['Qualify','Propose','Negotiate','Close'],
-    [2100,1800,1400,2400], [AMBER,BLUE,ROSE2,GREEN]);
-
-  // ── FINANCE ──
-  barChart('finRevEx', months,
-    [{ label:'Revenue', data:[3.1,3.4,3.6,3.2,3.8,4.1,4.0,3.9,4.2,4.5,4.3,4.7], backgroundColor:ROSE },
-     { label:'Expenditure', data:[2.4,2.6,2.7,2.5,2.8,3.0,2.9,2.8,3.0,3.1,3.0,3.1], backgroundColor:'rgba(106,127,154,0.4)' }]);
-
-  barChart('budgetVariance', ['Salaries','Marketing','IT Infra','Travel','Facilities','Other'],
-    [{ label:'Variance vs Budget £000s', data:[-12,18,-8,32,-5,22], backgroundColor:function(ctx){ return ctx.dataset.data[ctx.dataIndex] < 0 ? RED : GREEN; } }],
-    { plugins:{ legend:{ display:false } }, indexAxis:'y' });
-
-  donut('costBreakdown', ['Salaries','Marketing','IT','Facilities','Travel','Other'],
-    [52,14,12,9,7,6], [ROSE,BLUE,AMBER,GREEN,ROSE2,'rgba(106,127,154,0.5)']);
-
-  // ── AFTERMARKET ──
-  barChart('ticketVolume', months,
-    [{ label:'Opened', data:[280,310,295,340,320,290,350,380,360,320,345,390], backgroundColor:ROSE },
-     { label:'Resolved', data:[260,290,280,315,305,275,335,360,340,300,325,370], backgroundColor:GREEN },
-     { label:'Escalated', data:[18,22,15,25,20,16,28,32,24,18,22,30], backgroundColor:RED }]);
-
-  donut('pipelineChart2', ['On Track','At Risk','Critical'], [68,22,10], [GREEN,AMBER,RED]);
-
-  // ── CUSTOMER ──
-  lineChart('csatTrend', months,
-    [{ label:'CSAT %', data:[84,83,85,86,84,87,86,87,88,87,88,87], borderColor:ROSE, fill:false, tension:0.4, pointRadius:3 }]);
-
-  donut('npsChart', ['Promoters','Passives','Detractors'], [62,25,13], [GREEN,AMBER,RED]);
-
-  barChart('csatCategory', ['Product
-Quality','Support
-Speed','Account
-Management','Delivery','Billing'],
-    [{ label:'Score /10', data:[8.4,8.7,8.9,8.1,8.6], backgroundColor:[ROSE,ROSE2,GREEN,BLUE,AMBER] }],
-    { plugins:{ legend:{ display:false } } });
-
-  // ── OPERATIONS ──
-  lineChart('productionChart', months,
-    [{ label:'Actual Units', data:[3820,4010,4150,3920,4280,4410,4300,4180,4420,4590,4480,4620], borderColor:ROSE, fill:false, tension:0.4, pointRadius:3 },
-     { label:'Plan', data:[3900,3900,4000,4000,4200,4300,4300,4200,4400,4500,4500,4600], borderColor:'rgba(106,127,154,0.5)', borderDash:[4,4], pointRadius:0, fill:false }]);
-
-  barChart('inventoryChart', ['Raw
-Materials','WIP','Finished
-Goods','Spare
-Parts'],
-    [{ label:'Current Stock', data:[84,72,91,68], backgroundColor:function(ctx){ var v=ctx.dataset.data[ctx.dataIndex]; return v<75?RED:(v<85?AMBER:GREEN); } },
-     { label:'Safety Stock', data:[80,80,80,80], backgroundColor:'rgba(106,127,154,0.3)' }]);
-
-})();
-</script>
 <!-- Cookie Banner -->
 <div id="cookie-banner" role="dialog" aria-label="Cookie consent">
   <p>We use cookies to understand how visitors use our site. Choose which cookies to accept. See our <a href="/privacy.html">privacy policy</a>.</p>
@@ -1065,6 +957,414 @@ Parts'],
   wire('cookie-necessary','necessary',false);
   wire('cookie-decline','declined',false);
 })();
+</script>
+<script>
+// ═══════════════════════════════════════════════════════
+// NEXORA EXECUTIVE DASHBOARD - Pure JS, No Dependencies
+// ═══════════════════════════════════════════════════════
+
+var COLOURS = {
+  rose:  '#A63255', rose2: '#C44D6D', blue: '#3498db',
+  green: '#2ecc71', red:   '#e74c3c', amber:'#f39c12',
+  grey:  '#6A7F9A', greyFaint: 'rgba(106,127,154,0.12)',
+  white: '#F7F2EC', navy:  '#0E1628'
+};
+
+// ── DATA BY PERIOD ───────────────────────────────────
+var MONTHS = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+var Q_MONTHS = { ytd: MONTHS, q1: ['Jan','Feb','Mar'], q4: ['Oct','Nov','Dec'], fy25: MONTHS };
+
+var DATA = {
+  ytd: {
+    rev:       [3.1,3.4,3.6,3.2,3.8,4.1,4.0,3.9,4.2,4.5,4.3,4.7],
+    revTgt:    [3.2,3.3,3.5,3.5,3.7,3.9,4.0,4.0,4.1,4.2,4.3,4.5],
+    deptSplit: [43,22,17,11,7],
+    kpi: { rev:'£42.8M', revChg:'▲ 8.4%', margin:'34.2%', marginChg:'▲ 1.8pp', ebitda:'£6.1M', ebitdaChg:'On target', csat:'87.3%', csatChg:'▲ 3.1%', tickets:142, ticketsChg:'12 above target' },
+    sales:     [1380,1520,1650,1420,1680,1810,1760,1720,1850,1980,1890,2070],
+    salesTgt:  [1400,1450,1550,1550,1600,1700,1720,1720,1800,1850,1900,1950],
+    headcount: [42,18,35,12,9,7,5],
+    prod:      [3820,4010,4150,3920,4280,4410,4300,4180,4420,4590,4480,4620],
+    prodPlan:  [3900,3900,4000,4000,4200,4300,4300,4200,4400,4500,4500,4600]
+  },
+  q1: {
+    rev:       [4.5,4.3,4.7],
+    revTgt:    [4.2,4.3,4.5],
+    deptSplit: [44,21,18,10,7],
+    kpi: { rev:'£13.5M', revChg:'▲ 9.2%', margin:'35.1%', marginChg:'▲ 2.1pp', ebitda:'£1.9M', ebitdaChg:'▲ 3%', csat:'88.1%', csatChg:'▲ 1.4%', tickets:138, ticketsChg:'8 above target' },
+    sales:     [1980,1890,2070],
+    salesTgt:  [1850,1900,1950],
+    headcount: [44,19,36,13,10,7,5],
+    prod:      [4590,4480,4620],
+    prodPlan:  [4500,4500,4600]
+  },
+  q4: {
+    rev:       [3.9,4.2,4.5],
+    revTgt:    [4.0,4.1,4.2],
+    deptSplit: [42,23,16,12,7],
+    kpi: { rev:'£12.6M', revChg:'▲ 7.8%', margin:'33.8%', marginChg:'▲ 1.1pp', ebitda:'£1.7M', ebitdaChg:'On target', csat:'86.4%', csatChg:'▲ 2.8%', tickets:151, ticketsChg:'18 above target' },
+    sales:     [1720,1850,1980],
+    salesTgt:  [1720,1800,1850],
+    headcount: [41,18,34,12,9,7,5],
+    prod:      [4180,4420,4590],
+    prodPlan:  [4200,4400,4500]
+  },
+  fy25: {
+    rev:       [2.8,3.0,3.2,2.9,3.4,3.7,3.6,3.5,3.8,4.0,3.9,4.2],
+    revTgt:    [2.9,3.0,3.1,3.2,3.3,3.5,3.6,3.6,3.7,3.8,3.9,4.0],
+    deptSplit: [41,23,17,12,7],
+    kpi: { rev:'£39.6M', revChg:'▲ 5.1%', margin:'32.8%', marginChg:'▲ 0.9pp', ebitda:'£5.5M', ebitdaChg:'▼ 2%', csat:'84.2%', csatChg:'▲ 1.9%', tickets:158, ticketsChg:'20 above target' },
+    sales:     [1240,1340,1440,1370,1480,1600,1560,1540,1650,1750,1700,1840],
+    salesTgt:  [1300,1350,1450,1450,1500,1600,1620,1620,1700,1750,1800,1850],
+    headcount: [38,16,32,11,8,6,5],
+    prod:      [3600,3800,3900,3720,4050,4200,4100,4000,4200,4350,4280,4380],
+    prodPlan:  [3700,3700,3800,3800,4000,4100,4100,4000,4200,4300,4300,4400]
+  }
+};
+
+var currentPeriod = 'ytd';
+var currentPage   = 'overview';
+var charts = {};
+
+// ── PURE CANVAS CHART ENGINE ──────────────────────────
+
+function px(canvas) {
+  var dpr = window.devicePixelRatio || 1;
+  var parent = canvas.parentElement;
+  // Force explicit dimensions from parent or fallback
+  var w = parent.clientWidth  || parent.offsetWidth  || 400;
+  var h = parent.clientHeight || parent.offsetHeight || 200;
+  // Ensure sensible minimum
+  if (w < 50) w = 400;
+  if (h < 50) h = 200;
+  canvas.style.width  = w + 'px';
+  canvas.style.height = h + 'px';
+  canvas.width  = w * dpr;
+  canvas.height = h * dpr;
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return { ctx: ctx, w: w, h: h };
+}
+
+function drawLine(canvas, labels, series) {
+  if (!canvas) return;
+  var d = px(canvas);
+  var ctx = d.ctx, W = d.w, H = d.h;
+  var PAD = { top: 20, right: 20, bottom: 36, left: 48 };
+  var gW = W - PAD.left - PAD.right;
+  var gH = H - PAD.top  - PAD.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  var allVals = series.reduce(function(a,s){ return a.concat(s.data); }, []);
+  var minV = Math.min.apply(null, allVals) * 0.92;
+  var maxV = Math.max.apply(null, allVals) * 1.05;
+  var range = maxV - minV;
+
+  function xPos(i) { return PAD.left + (i / (labels.length - 1)) * gW; }
+  function yPos(v) { return PAD.top + gH - ((v - minV) / range) * gH; }
+
+  // Grid lines
+  ctx.strokeStyle = COLOURS.greyFaint;
+  ctx.lineWidth = 1;
+  for (var gi = 0; gi <= 4; gi++) {
+    var gy = PAD.top + (gi / 4) * gH;
+    ctx.beginPath(); ctx.moveTo(PAD.left, gy); ctx.lineTo(PAD.left + gW, gy); ctx.stroke();
+    var gv = maxV - (gi / 4) * range;
+    ctx.fillStyle = COLOURS.grey; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(gv.toFixed(1), PAD.left - 4, gy + 4);
+  }
+
+  // X labels
+  ctx.fillStyle = COLOURS.grey; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'center';
+  labels.forEach(function(l, i) {
+    if (labels.length <= 6 || i % Math.ceil(labels.length / 6) === 0)
+      ctx.fillText(l, xPos(i), H - 8);
+  });
+
+  // Series
+  series.forEach(function(s) {
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = s.dash ? 1.5 : 2;
+    ctx.setLineDash(s.dash || []);
+    ctx.globalAlpha = s.dash ? 0.6 : 1;
+    ctx.beginPath();
+    s.data.forEach(function(v, i) {
+      if (i === 0) ctx.moveTo(xPos(i), yPos(v));
+      else ctx.lineTo(xPos(i), yPos(v));
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    if (!s.dash) {
+      if (s.fill) {
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = s.color;
+        ctx.lineTo(xPos(s.data.length - 1), PAD.top + gH);
+        ctx.lineTo(PAD.left, PAD.top + gH);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      s.data.forEach(function(v, i) {
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(xPos(i), yPos(v), 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+    ctx.globalAlpha = 1;
+  });
+
+  // Legend
+  var lx = PAD.left;
+  series.forEach(function(s) {
+    ctx.fillStyle = s.color; ctx.globalAlpha = s.dash ? 0.6 : 1;
+    ctx.fillRect(lx, 6, 16, 3);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = COLOURS.grey; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(s.label, lx + 20, 12);
+    lx += ctx.measureText(s.label).width + 36;
+  });
+}
+
+function drawBar(canvas, labels, datasets, opts) {
+  if (!canvas) return;
+  opts = opts || {};
+  var d = px(canvas);
+  var ctx = d.ctx, W = d.w, H = d.h;
+  var PAD = { top: 20, right: 12, bottom: 36, left: opts.horizontal ? 80 : 40 };
+  var gW = W - PAD.left - PAD.right;
+  var gH = H - PAD.top  - PAD.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  var allVals = datasets.reduce(function(a,ds){ return a.concat(ds.data); }, []);
+  var maxV = Math.max.apply(null, allVals.map(Math.abs)) * 1.1;
+  var n = labels.length;
+  var ds = datasets.length;
+  var groupW = (opts.horizontal ? gH : gW) / n;
+  var barW = groupW * 0.65 / ds;
+
+  function drawGridH(axis) {
+    ctx.strokeStyle = COLOURS.greyFaint; ctx.lineWidth = 1;
+    for (var gi = 0; gi <= 4; gi++) {
+      var v = (gi / 4) * maxV;
+      var pos = opts.horizontal
+        ? PAD.left + (v / maxV) * gW
+        : PAD.top + gH - (v / maxV) * gH;
+      ctx.beginPath();
+      if (opts.horizontal) {
+        ctx.moveTo(pos, PAD.top); ctx.lineTo(pos, PAD.top + gH);
+      } else {
+        ctx.moveTo(PAD.left, pos); ctx.lineTo(PAD.left + gW, pos);
+      }
+      ctx.stroke();
+      ctx.fillStyle = COLOURS.grey; ctx.font = '9px Inter,sans-serif';
+      if (opts.horizontal) {
+        ctx.textAlign = 'center';
+        ctx.fillText(v > 999 ? (v/1000).toFixed(0)+'k' : v.toFixed(0), pos, H - 8);
+      } else {
+        ctx.textAlign = 'right';
+        ctx.fillText(v > 999 ? (v/1000).toFixed(1)+'k' : v.toFixed(0), PAD.left - 4, pos + 4);
+      }
+    }
+  }
+  drawGridH();
+
+  datasets.forEach(function(dataset, di) {
+    labels.forEach(function(lbl, li) {
+      var val = dataset.data[li];
+      var col = Array.isArray(dataset.color) ? dataset.color[li] : dataset.color;
+      ctx.fillStyle = col;
+      if (opts.horizontal) {
+        var bY = PAD.top + li * groupW + di * barW + groupW * 0.175;
+        var bW = (Math.abs(val) / maxV) * gW;
+        ctx.fillRect(PAD.left, bY, bW, barW);
+      } else {
+        var bX = PAD.left + li * groupW + di * barW + groupW * 0.175;
+        var bH = (Math.abs(val) / maxV) * gH;
+        ctx.fillRect(bX, PAD.top + gH - bH, barW, bH);
+      }
+    });
+  });
+
+  // Labels
+  ctx.fillStyle = COLOURS.grey; ctx.font = '9px Inter,sans-serif';
+  labels.forEach(function(lbl, li) {
+    if (opts.horizontal) {
+      ctx.textAlign = 'right';
+      ctx.fillText(lbl, PAD.left - 4, PAD.top + li * groupW + groupW * 0.5 + 4);
+    } else {
+      ctx.textAlign = 'center';
+      ctx.fillText(lbl, PAD.left + li * groupW + groupW * 0.5, H - 8);
+    }
+  });
+}
+
+function drawDonut(canvas, labels, data, colors) {
+  if (!canvas) return;
+  var d = px(canvas);
+  var ctx = d.ctx, W = d.w, H = d.h;
+  ctx.clearRect(0, 0, W, H);
+  var total = data.reduce(function(a,b){return a+b;}, 0);
+  var cx = W * 0.38, cy = H / 2, r = Math.min(cx, cy) * 0.82, ri = r * 0.55;
+  var angle = -Math.PI / 2;
+  data.forEach(function(v, i) {
+    var sweep = (v / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + sweep);
+    ctx.closePath();
+    ctx.fillStyle = colors[i];
+    ctx.fill();
+    angle += sweep;
+  });
+  ctx.beginPath(); ctx.arc(cx, cy, ri, 0, Math.PI * 2);
+  ctx.fillStyle = COLOURS.navy; ctx.fill();
+
+  // Legend
+  var lx = W * 0.76, ly = cy - (labels.length * 18) / 2;
+  labels.forEach(function(l, i) {
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(lx, ly + i * 18, 10, 10);
+    ctx.fillStyle = COLOURS.grey; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(l + ' ' + data[i] + '%', lx + 14, ly + i * 18 + 9);
+  });
+}
+
+// ── RENDER ALL CHARTS FOR PERIOD ─────────────────────
+
+function renderCharts(period) {
+  var d = DATA[period];
+  var labels = Q_MONTHS[period];
+
+  drawLine(document.getElementById('overviewRevChart'), labels,
+    [{ label:'Actual', data:d.rev, color:COLOURS.rose, fill:true },
+     { label:'Target', data:d.revTgt, color:COLOURS.grey, dash:[5,3] }]);
+
+  drawDonut(document.getElementById('overviewDonut'),
+    ['Sales','Finance','Aftermarket','Ops','Customer'],
+    d.deptSplit,
+    [COLOURS.rose, COLOURS.rose2, COLOURS.blue, COLOURS.amber, COLOURS.green]);
+
+  drawBar(document.getElementById('headcountBar'),
+    ['Sales','Finance','Ops','Marketing','IT','HR','Legal'],
+    [{ data:d.headcount, color:[COLOURS.rose,COLOURS.rose2,COLOURS.blue,COLOURS.amber,COLOURS.green,'rgba(166,50,85,0.5)','rgba(106,127,154,0.5)'] }]);
+
+  drawLine(document.getElementById('salesMonthly'), labels,
+    [{ label:'Actual', data:d.sales, color:COLOURS.rose, fill:false },
+     { label:'Target', data:d.salesTgt, color:COLOURS.grey, dash:[5,3] }]);
+
+  drawBar(document.getElementById('salesProduct'),
+    ['Enterprise','Services','Hardware','Training','Consulting'],
+    [{ data:[d.sales.reduce(function(a,b){return a+b;},0)*0.43/1000,
+             d.sales.reduce(function(a,b){return a+b;},0)*0.29/1000,
+             d.sales.reduce(function(a,b){return a+b;},0)*0.14/1000,
+             d.sales.reduce(function(a,b){return a+b;},0)*0.09/1000,
+             d.sales.reduce(function(a,b){return a+b;},0)*0.05/1000].map(function(v){return Math.round(v*10)/10;}),
+       color:[COLOURS.rose,COLOURS.rose2,COLOURS.blue,COLOURS.amber,COLOURS.green] }]);
+
+  drawLine(document.getElementById('finRevEx'), labels,
+    [{ label:'Revenue', data:d.rev, color:COLOURS.rose, fill:false },
+     { label:'Costs',   data:d.rev.map(function(v){return Math.round(v*0.76*10)/10;}), color:COLOURS.grey, dash:[5,3] }]);
+
+  var varData = [-12,18,-8,32,-5,22].map(function(v){return v*(period==='q1'?0.25:period==='q4'?0.25:period==='fy25'?0.85:1);});
+  drawBar(document.getElementById('budgetVariance'),
+    ['Salaries','Marketing','IT','Travel','Facilities','Other'],
+    [{ data:varData.map(function(v){return Math.abs(v);}),
+       color:varData.map(function(v){return v<0?COLOURS.red:COLOURS.green;}) }],
+    { horizontal: true });
+
+  drawDonut(document.getElementById('costBreakdown'),
+    ['Salaries','Marketing','IT','Facilities','Travel','Other'],
+    [52,14,12,9,7,6],
+    [COLOURS.rose,COLOURS.blue,COLOURS.amber,COLOURS.green,COLOURS.rose2,'rgba(106,127,154,0.6)']);
+
+  drawLine(document.getElementById('csatTrend'), labels,
+    [{ label:'CSAT %', data:d.rev.map(function(v){return Math.round((82+v*1.2)*10)/10;}), color:COLOURS.rose, fill:true }]);
+
+  drawDonut(document.getElementById('npsChart'),
+    ['Promoters','Passives','Detractors'],
+    [62,25,13],
+    [COLOURS.green, COLOURS.amber, COLOURS.red]);
+
+  drawBar(document.getElementById('csatCategory'),
+    ['Quality','Support','Account','Delivery','Billing'],
+    [{ data:[8.4,8.7,8.9,8.1,8.6], color:[COLOURS.rose,COLOURS.rose2,COLOURS.green,COLOURS.blue,COLOURS.amber] }]);
+
+  drawLine(document.getElementById('productionChart'), labels,
+    [{ label:'Actual', data:d.prod, color:COLOURS.rose, fill:false },
+     { label:'Plan',   data:d.prodPlan, color:COLOURS.grey, dash:[5,3] }]);
+
+  // Aftermarket - Ticket Volume (was missing)
+  drawLine(document.getElementById('ticketVolume'), labels,
+    [{ label:'Opened', data:d.prod.map(function(v){return Math.round(v*0.071);}), color:COLOURS.rose, fill:false },
+     { label:'Resolved', data:d.prod.map(function(v){return Math.round(v*0.067);}), color:COLOURS.green, dash:[4,3] }]);
+
+  // Sales - Pipeline Chart (was missing)
+  drawDonut(document.getElementById('pipelineChart'),
+    ['Qualify','Propose','Negotiate','Close'],
+    [28,35,22,15],
+    [COLOURS.amber, COLOURS.blue, COLOURS.rose2, COLOURS.green]);
+
+  // Operations - Inventory (fixed: color must be array not function)
+  drawBar(document.getElementById('inventoryChart'),
+    ['Raw Mat.','WIP','Finished','Spare Parts'],
+    [{ data:[84,72,91,68], color:[COLOURS.green,COLOURS.red,COLOURS.green,COLOURS.amber] },
+     { data:[80,80,80,80], color:'rgba(106,127,154,0.25)' }]);
+
+  // Update KPI cards
+  var k = d.kpi;
+  function set(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+  set('kpi-rev', k.rev); set('kpi-rev-chg', k.revChg);
+  set('kpi-margin', k.margin); set('kpi-margin-chg', k.marginChg);
+  set('kpi-ebitda', k.ebitda); set('kpi-ebitda-chg', k.ebitdaChg);
+  set('kpi-csat', k.csat); set('kpi-csat-chg', k.csatChg);
+  set('kpi-tickets', k.tickets); set('kpi-tickets-chg', k.ticketsChg);
+}
+
+// ── PAGE SWITCHING ────────────────────────────────────
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(function(p) {
+    p.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  var page = document.getElementById('page-' + pageId);
+  if (page) page.classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    if (b.textContent.trim().toLowerCase() === pageId.toLowerCase())
+      b.classList.add('active');
+  });
+  currentPage = pageId;
+  // Use requestAnimationFrame to ensure layout is complete before drawing
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      renderCharts(currentPeriod);
+    });
+  });
+}
+
+// ── PERIOD FILTER ─────────────────────────────────────
+
+function updatePeriod(val) {
+  currentPeriod = val;
+  renderCharts(val);
+}
+
+// ── INIT ─────────────────────────────────────────────
+
+window.addEventListener('load', function() {
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      renderCharts('ytd');
+    });
+  });
+  window.addEventListener('resize', function() {
+    renderCharts(currentPeriod);
+  });
+});
 </script>
 </body>
 </html>
