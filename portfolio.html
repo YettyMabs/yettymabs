@@ -32,7 +32,8 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { overflow-x: hidden;
+  scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   background: var(--navy);
@@ -142,13 +143,17 @@ main { padding-top: 68px; }
 
 /* ── SECTIONS ────────────────────────────────────────────── */
 .section {
+  position: relative;
   padding: 6rem 2.5rem;
   max-width: var(--max-width);
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .section-full {
+  position: relative;
   padding: 6rem 2.5rem;
+  overflow: hidden;
 }
 
 .section-inner {
@@ -283,6 +288,8 @@ h1 em, h2 em, h3 em { font-style: italic; color: var(--rose); }
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 /* ── TRUST BAR ───────────────────────────────────────────── */
@@ -747,15 +754,17 @@ footer {
 }
 
 @media (max-width: 768px) {
-  html, body { overflow-x: hidden; max-width: 100vw; }
-  .nav { padding: 0 1rem; position: fixed; width: 100%; box-sizing: border-box; }
-  .nav-logo { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); max-width: calc(100% - 80px); }
-  .nav-logo svg { width: 36px !important; height: 36px !important; }
+  html { overflow-x: hidden; }
+  body { overflow-x: hidden; max-width: 100%; }
+  .nav { padding: 0 1rem; width: 100%; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { flex: 0 1 auto; min-width: 0; overflow: hidden; }
+  .nav-logo svg { width: 36px !important; height: 36px !important; flex-shrink: 0; }
+  .nav-logo span { display: none; }
   .nav-links { display: none; position: fixed; top: 68px; left: 0; right: 0; width: 100%; box-sizing: border-box; background: var(--midnight); flex-direction: column; gap: 0; padding: 1.5rem; border-bottom: 1px solid var(--border); z-index: 9998; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
   .nav-links.open { display: flex; }
   .nav-links a { padding: 0.75rem 0; border-bottom: 1px solid var(--border-dim); font-size: 0.9rem; color: var(--ivory); display: block; width: 100%; }
   .nav-cta { display: none; }
-  .hamburger { display: flex; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
+  .hamburger { display: flex; flex-shrink: 0; margin-left: 1rem; }
   .section { padding: 4rem 1.5rem; }
   .section-full { padding: 4rem 1.5rem; }
   .hero { padding: 3rem 1.5rem; min-height: auto; }
