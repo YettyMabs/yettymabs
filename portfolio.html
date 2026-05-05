@@ -112,19 +112,22 @@ body {
 .hamburger {
   display: none;
   flex-direction: column;
+  justify-content: center;
   gap: 5px;
   cursor: pointer;
   background: none;
   border: none;
-  padding: 8px;
+  padding: 12px 8px;
   z-index: 9999;
   -webkit-tap-highlight-color: transparent;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .hamburger span {
   display: block;
-  width: 22px;
-  height: 1.5px;
+  width: 24px;
+  height: 2px;
   background: var(--ivory);
   transition: all 0.3s ease;
   transform-origin: center;
@@ -743,13 +746,16 @@ footer {
   .grid-4 { grid-template-columns: 1fr 1fr; }
 }
 
-@media (max-width: 640px) {
-  .nav { padding: 0 1.5rem; }
-  .nav-links { display: none; position: fixed; top: 68px; left: 0; right: 0; background: var(--midnight); flex-direction: column; gap: 0; padding: 1.5rem; border-bottom: 1px solid var(--border); z-index: 9998; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; max-width: 100vw; }
+  .nav { padding: 0 1rem; position: fixed; width: 100%; box-sizing: border-box; }
+  .nav-logo { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); max-width: calc(100% - 80px); }
+  .nav-logo svg { width: 36px !important; height: 36px !important; }
+  .nav-links { display: none; position: fixed; top: 68px; left: 0; right: 0; width: 100%; box-sizing: border-box; background: var(--midnight); flex-direction: column; gap: 0; padding: 1.5rem; border-bottom: 1px solid var(--border); z-index: 9998; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
   .nav-links.open { display: flex; }
-  .nav-links a { padding: 0.75rem 0; border-bottom: 1px solid var(--border-dim); font-size: 0.85rem; }
+  .nav-links a { padding: 0.75rem 0; border-bottom: 1px solid var(--border-dim); font-size: 0.9rem; color: var(--ivory); display: block; width: 100%; }
   .nav-cta { display: none; }
-  .hamburger { display: flex; }
+  .hamburger { display: flex; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
   .section { padding: 4rem 1.5rem; }
   .section-full { padding: 4rem 1.5rem; }
   .hero { padding: 3rem 1.5rem; min-height: auto; }
@@ -786,6 +792,12 @@ footer {
 }
 #cookie-banner p a { color: #A63255; text-decoration: underline; }
 .cookie-buttons { display: flex; gap: 0.6rem; flex-shrink: 0; flex-wrap: wrap; }
+@media (max-width: 600px) {
+  #cookie-banner { padding: 1rem; gap: 0.75rem; }
+  #cookie-banner p { font-size: 0.78rem; min-width: 100%; }
+  .cookie-buttons { width: 100%; justify-content: flex-end; }
+  #cookie-decline, #cookie-necessary, #cookie-accept { font-size: 0.75rem; padding: 0.45rem 0.75rem; }
+}
 #cookie-accept {
   background: #A63255; color: #F7F2EC; border: none;
   padding: 0.5rem 1.1rem; font-size: 0.8rem; font-weight: 500;
