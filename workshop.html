@@ -90,6 +90,9 @@ body {
   text-transform: uppercase;
   transition: color 0.25s;
 }
+.nav-links a[aria-current="page"] {
+  color: var(--ivory);
+}
 
 .nav-links a:hover { color: var(--ivory); }
 
@@ -845,7 +848,7 @@ footer {
 </svg><span style="font-family:var(--font-serif);font-size:1.1rem;color:var(--ivory);">YettyMabs<span style="color:var(--rose);">.</span></span></a>
   <ul class="nav-links" id="nav-menu" role="list">
     <li><a href="/">Home</a></li>
-    <li><a href="/services.html" style="color:var(--ivory)">Services</a></li>
+    <li><a href="/services.html">Services</a></li>
     <li><a href="/workshop.html"  aria-current="page">Workshops</a></li>
 <li><a href="/about.html" >About</a></li>
 <li><a href="/portfolio.html" >Portfolio</a></li>
@@ -892,7 +895,7 @@ footer {
 
       <div style="display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;">
         <a href="https://www.eventbrite.co.uk/e/build-your-first-power-bi-dashboard-in-90-minutes-tickets-1989027708419?aff=oddtdtcreator" target="_blank" rel="noopener" class="btn-primary">Reserve your place on Eventbrite</a>
-        <a href="#cohort" class="btn-ghost">View paid training options</a>
+        <a href="#cohort" class="btn-ghost">View paid cohorts</a>
       </div>
     </div>
   </div>
@@ -989,13 +992,13 @@ footer {
       <h2 style="font-size:2.8rem;margin-bottom:1rem;">Want to go <em>further</em>?</h2>
       <p class="body-text" style="max-width:720px;margin-bottom:3rem;font-size:1.05rem;">The free workshop covers the fundamentals. For people who want structured learning with their own data, we run paid cohorts and one-to-one sessions. Pick the option that fits how you learn best.</p>
 
-      <div class="grid-3" style="gap:1px;background:var(--border-dim);">
+      <div class="grid-3" style="gap:1px;background:var(--border-dim);margin-bottom:3rem;">
         <div style="background:var(--navy-mid);padding:2rem;border-top:3px solid var(--rose);">
           <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.5rem;">Cohort</div>
           <div style="font-family:var(--font-serif);font-size:1.4rem;color:var(--ivory);margin-bottom:0.25rem;">Power BI Fundamentals</div>
           <div style="font-family:var(--font-serif);font-size:2.2rem;color:var(--rose);margin:0.5rem 0;">£199</div>
           <div style="font-size:0.8rem;color:var(--grey);line-height:1.7;margin-bottom:1.2rem;">Per person. Four weekly sessions of 90 minutes. Small group of up to eight. We work with your own dataset. You leave with a finished dashboard ready to use.</div>
-          <a href="mailto:hello@yettymabs.com?subject=Power%20BI%20Cohort%20Interest" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.4rem;">Register interest</a>
+          <a href="#cohort-form" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.4rem;">Register interest</a>
         </div>
         <div style="background:var(--navy-mid);padding:2rem;border-top:3px solid var(--rose);position:relative;">
           <div style="position:absolute;top:0;right:1.25rem;background:var(--rose);color:var(--ivory);font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;">Most popular</div>
@@ -1003,7 +1006,7 @@ footer {
           <div style="font-family:var(--font-serif);font-size:1.4rem;color:var(--ivory);margin-bottom:0.25rem;">Power BI Intermediate</div>
           <div style="font-family:var(--font-serif);font-size:2.2rem;color:var(--rose);margin:0.5rem 0;">£299</div>
           <div style="font-size:0.8rem;color:var(--grey);line-height:1.7;margin-bottom:1.2rem;">Per person. Four weekly sessions covering SQL connections, SharePoint sources, DAX measures and report design. Prerequisite is fundamentals or equivalent.</div>
-          <a href="mailto:hello@yettymabs.com?subject=Power%20BI%20Cohort%20Interest" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.4rem;">Register interest</a>
+          <a href="#cohort-form" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.4rem;">Register interest</a>
         </div>
         <div style="background:var(--navy-mid);padding:2rem;border-top:3px solid var(--rose);">
           <div style="font-size:0.65rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.5rem;">One-to-one</div>
@@ -1013,10 +1016,138 @@ footer {
           <a href="/booking.html" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.4rem;">Book a session</a>
         </div>
       </div>
-      <p style="font-size:0.78rem;color:var(--grey);margin-top:1rem;">All training is delivered online via Microsoft Teams. Recordings provided. Sessions can also be delivered on site for groups of four or more, travel costs agreed in writing in advance.</p>
+
+      <!-- Registration Form -->
+      <div id="cohort-form" style="background:var(--navy-mid);padding:3rem;border-left:3px solid var(--rose);max-width:760px;">
+        <div class="section-label" style="margin-bottom:1rem;">Register your interest</div>
+        <h3 style="font-family:var(--font-serif);font-size:1.8rem;color:var(--ivory);margin-bottom:0.75rem;font-weight:300;">Join the cohort waiting list</h3>
+        <p style="font-size:0.95rem;color:var(--grey);line-height:1.7;margin-bottom:2rem;">Cohort dates are confirmed once we have enough interest to fill a small group. Register below and we will email you the moment a date is set with the payment link and joining details. No payment now. No commitment.</p>
+
+        <form action="https://formspree.io/f/maqpqrer" method="POST">
+          <input type="hidden" name="_subject" value="Cohort interest registration from yettymabs.com">
+          <input type="hidden" name="form_type" value="cohort_interest">
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div>
+              <label style="display:block;font-size:0.75rem;color:var(--grey);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;">Your name</label>
+              <input type="text" name="name" required style="width:100%;background:var(--midnight);border:1px solid var(--border-dim);padding:0.7rem 0.9rem;color:var(--ivory);font-family:var(--font-sans);font-size:0.95rem;">
+            </div>
+            <div>
+              <label style="display:block;font-size:0.75rem;color:var(--grey);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;">Email address</label>
+              <input type="email" name="email" required style="width:100%;background:var(--midnight);border:1px solid var(--border-dim);padding:0.7rem 0.9rem;color:var(--ivory);font-family:var(--font-sans);font-size:0.95rem;">
+            </div>
+          </div>
+
+          <div style="margin-bottom:1rem;">
+            <label style="display:block;font-size:0.75rem;color:var(--grey);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;">Company or organisation (optional)</label>
+            <input type="text" name="company" style="width:100%;background:var(--midnight);border:1px solid var(--border-dim);padding:0.7rem 0.9rem;color:var(--ivory);font-family:var(--font-sans);font-size:0.95rem;">
+          </div>
+
+          <div style="margin-bottom:1rem;">
+            <label style="display:block;font-size:0.75rem;color:var(--grey);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;">Which cohort interests you</label>
+            <select name="cohort" required style="width:100%;background:var(--midnight);border:1px solid var(--border-dim);padding:0.7rem 0.9rem;color:var(--ivory);font-family:var(--font-sans);font-size:0.95rem;">
+              <option value="">Please select</option>
+              <option value="Power BI Fundamentals (&pound;199)">Power BI Fundamentals (&pound;199)</option>
+              <option value="Power BI Intermediate (&pound;299)">Power BI Intermediate (&pound;299)</option>
+              <option value="Both">Both, fundamentals first then intermediate</option>
+              <option value="Not sure yet">Not sure yet, would like to discuss</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:1.5rem;">
+            <label style="display:block;font-size:0.75rem;color:var(--grey);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;">What are you hoping to achieve (optional)</label>
+            <textarea name="goal" rows="3" style="width:100%;background:var(--midnight);border:1px solid var(--border-dim);padding:0.7rem 0.9rem;color:var(--ivory);font-family:var(--font-sans);font-size:0.95rem;resize:vertical;"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="font-size:0.9rem;padding:0.85rem 2rem;border:none;cursor:pointer;">Register interest</button>
+          <p style="font-size:0.78rem;color:var(--grey);margin-top:1rem;">No payment now. We will email you when the next cohort dates are confirmed with the payment link.</p>
+        </form>
+      </div>
+
+      <p style="font-size:0.78rem;color:var(--grey);margin-top:2rem;">All training is delivered online via Microsoft Teams. Recordings provided. Sessions can also be delivered on site for groups of four or more, travel costs agreed in writing in advance.</p>
     </div>
   </div>
 </section>
+
+
+<!-- COHORT REGISTRATION FORM -->
+<section id="cohort-form" class="section" style="background:var(--navy-mid);" aria-label="Cohort interest form">
+  <div class="section-inner">
+    <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:4rem;align-items:start;padding:5rem 0;">
+      <div>
+        <div class="section-label">Express interest</div>
+        <h2 style="font-size:2.2rem;margin-bottom:1.5rem;">Join the <em>cohort waiting list</em></h2>
+        <p class="body-text" style="margin-bottom:1.5rem;">First cohort dates are being confirmed for June and July 2026. Add your name to the list and we will get in touch as soon as a date is set, with payment details and joining instructions.</p>
+        <p class="body-text" style="font-size:0.9rem;color:var(--grey);">No payment required to join the list. We will only confirm your place once you have paid the cohort fee, and we will give you the option to step back at that point if the timing is wrong.</p>
+      </div>
+      <div>
+        <form action="https://formspree.io/f/maqpqrer" method="POST" aria-label="Cohort interest form">
+          <input type="hidden" name="_subject" value="Power BI Cohort Interest, YettyMabs Workshop Page">
+          <input type="hidden" name="form_source" value="Workshop page cohort registration">
+
+          <div class="form-group">
+            <label class="form-label" for="name">Your name</label>
+            <input class="form-input" type="text" id="name" name="name" required autocomplete="name" placeholder="Full name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email address</label>
+            <input class="form-input" type="email" id="email" name="email" required autocomplete="email" placeholder="your@email.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="organisation">Organisation (optional)</label>
+            <input class="form-input" type="text" id="organisation" name="organisation" autocomplete="organization" placeholder="Company or organisation name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cohort_choice">Which cohort interests you?</label>
+            <select class="form-select" id="cohort_choice" name="cohort_choice" required>
+              <option value="">Select an option</option>
+              <option value="Fundamentals">Power BI Fundamentals, £199</option>
+              <option value="Intermediate">Power BI Intermediate, £299</option>
+              <option value="Both">I am interested in both, may take them in sequence</option>
+              <option value="One-to-one">One-to-one private session, £150 per hour</option>
+              <option value="Undecided">Not sure yet, send me more details</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="experience">What is your current Power BI experience?</label>
+            <select class="form-select" id="experience" name="experience">
+              <option value="">Select an option</option>
+              <option value="None">None at all</option>
+              <option value="Beginner">Opened Power BI but not built anything</option>
+              <option value="Some">Built a basic dashboard before</option>
+              <option value="Intermediate">Comfortable with Power BI, want to go further</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reporting">What manual reporting are you trying to replace? (optional)</label>
+            <textarea class="form-textarea" id="reporting" name="reporting" rows="3" placeholder="Tell us a bit about the data you work with and the reports that take up your time"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="timing">When would you ideally start?</label>
+            <select class="form-select" id="timing" name="timing">
+              <option value="">Select an option</option>
+              <option value="ASAP">As soon as possible</option>
+              <option value="June">June 2026</option>
+              <option value="July">July 2026</option>
+              <option value="Later">Later in the year, no rush</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary" style="font-size:0.9rem;padding:0.85rem 2rem;margin-top:0.5rem;">Add me to the list</button>
+
+          <p style="font-size:0.78rem;color:var(--grey);margin-top:1.5rem;line-height:1.6;">By submitting this form you agree we can email you about the cohort. We will not share your details with anyone else and you can ask us to remove you from the list at any time.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- FAQ -->
 <section class="section" aria-label="FAQ">
@@ -1146,6 +1277,25 @@ footer {
   wire('cookie-accept','accepted',true);
   wire('cookie-necessary','necessary',false);
   wire('cookie-decline','declined',false);
+})();
+</script>
+<script>
+(function() {
+  var btn = document.getElementById('hamburger');
+  var menu = document.getElementById('nav-menu');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', function() {
+    var isOpen = menu.classList.toggle('open');
+    btn.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  menu.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      menu.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  });
 })();
 </script>
 </body>
